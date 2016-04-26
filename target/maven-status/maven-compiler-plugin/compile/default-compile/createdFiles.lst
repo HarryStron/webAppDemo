@@ -1,0 +1,15 @@
+com\cs391\jpa\Student.class
+com\cs391\jpa\Credentials.class
+com\cs391\jsf\SuperView.class
+com\cs391\jpa\User.class
+com\cs391\jsf\IndexView.class
+com\cs391\ejb\ProjectManagement.class
+com\cs391\jpa\Project.class
+com\cs391\jpa\ProjectTopic.class
+com\cs391\ejb\ProjectStore.class
+com\cs391\jsf\AdminView.class
+com\cs391\jsf\StudentView.class
+com\cs391\ejb\UserManagement.class
+com\cs391\jpa\Administrator.class
+com\cs391\jpa\Project$Status.class
+com\cs391\jpa\Supervisor.class

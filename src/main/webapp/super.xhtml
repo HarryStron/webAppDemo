@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Project Management</title>
+    </h:head>
+    <h:body>
+        <p:growl id="msgs" showDetail="true" />
+        <h:form>
+            <h:outputText id="notifications" value="#{superView.notifications}" />
+            <p:poll interval="3" update="notifications" />
+        </h:form>
+
+        <p:tabView dynamic="true" cache="true">
+            <p:tab title="Reports">
+                <h:form id="reportsForm">
+                    <h:panelGrid id="grid" columns="2" cellpadding="10">
+                        <p:dataTable id="report" var="project" value="#{superView.projects}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{project.title}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Topic" />
+                                </f:facet>
+                                <ui:repeat value="#{project.topic}" var="tpc" varStatus="loop">
+                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Required skills"/>
+                                </f:facet>
+                                <h:outputText value="#{project.requiredSkills}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project description" />
+                                </f:facet>
+                                <h:outputText value="#{project.description}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Owner" />
+                                </f:facet>
+                                <h:outputText value="#{project.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Status" />
+                                </f:facet>
+                                <h:outputText value="#{project.status}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register Project">
+                <h:form id="registerProjectForm">
+                    <p:panel>
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="projectTitle" value="Project title:" />
+                            <p:inputTextarea id="projectTitle" value="#{superView.projectTitle}" label="title" required="true" >
+                                <f:validateLength maximum="200" />
+                            </p:inputTextarea>
+                            
+                            <p:outputLabel for="projectDescription" value="Project description:" />
+                            <p:inputTextarea id="projectDescription" value="#{superView.projectDescription}" label="description" required="true" >
+                                <f:validateLength maximum="1000" />
+                            </p:inputTextarea>
+                            
+                            <p:outputLabel for="projectSkills" value="Project skills:" />
+                            <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills" required="true" >
+                                <f:validateLength maximum="1000" />
+                            </p:inputTextarea>
+                            
+                            <p:outputLabel for="projectTopics" value="Project topics:" />
+                            <p:inputTextarea id="projectTopics" value="get available from DB" label="topics" required="true" />
+                            
+                            <p:outputLabel for="projectSupervisor" value="Project supervisor:" />
+                            <p:inputTextarea id="projectSupervisor" value="assign to current" label="supervisor" required="true" />
+                            
+                        </h:panelGrid>
+                        <p:commandButton value="Register" actionListener="#{superView.registerProject}" icon="ui-icon-check" />
+                    </p:panel>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register Project Topic">
+                <h:form id="registerTopicForm">
+                    <p:panel>
+                        <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
+                            <f:facet name="header">
+                                Existing topics
+                            </f:facet>
+                            #{xtopic.topic}
+                        </p:dataList>
+
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="topicTitle" value="Topic title:" />
+                            <p:inputTextarea id="topicTitle" value="#{superView.topicTitle}" label="title" required="true" >
+                                <f:validateLength maximum="100" />
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="topicDescription" value="Topic description:" />
+                            <p:inputTextarea id="topicDescription" value="#{superView.topicDescription}" label="description" required="true">
+                                <f:validateLength maximum="100" />
+                            </p:inputTextarea>
+                        </h:panelGrid>
+                        <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" >
+                            <f:ajax render="registerTopicForm"/>
+                        </p:commandButton>
+                        <p:commandButton value="Refresh List" update="registerTopicForm"/>
+                    </p:panel>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Proposals">
+                <h:form id="proposalsForm">
+                    <h:panelGrid id="proposalsGrid" columns="2" cellpadding="10">
+                        <p:dataTable id="proposals" var="proposal" value="#{superView.proposals}"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                    paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.title}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Topic" />
+                                </f:facet>
+                                <ui:repeat value="#{proposal.topic}" var="tpc" varStatus="loop">
+                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Required skills"/>
+                                </f:facet>
+                                <h:outputText value="#{proposal.requiredSkills}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project description" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.description}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Owner" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}"/>
+                                <p:commandButton value="Decline" action="#{superView.declineProposal}"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+
+        </p:tabView>
+
+        <h:form>
+            <p:commandButton value="Logout" action="#{superView.logout}" />
+        </h:form>
+    </h:body>
+</html>
+

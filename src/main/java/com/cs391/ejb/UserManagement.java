@@ -1,0 +1,122 @@
+package com.cs391.ejb;
+
+import com.cs391.jpa.Administrator;
+import com.cs391.jpa.Credentials;
+import com.cs391.jpa.Student;
+import com.cs391.jpa.Supervisor;
+import com.cs391.jpa.User;
+import java.util.List;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+@Stateless
+public class UserManagement {
+
+    @PersistenceContext(unitName = "WebappsDB")
+    private EntityManager em;
+
+    public void addNewUser(User user) {
+        em.persist(user);
+    }
+
+    public void registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) {
+        Administrator admin = new Administrator();
+        admin.setSussexID(sussexId);
+        admin.setName(name);
+        admin.setSurname(surname);
+        admin.setEmail(email);
+        admin.setPhoneNum(phoneNum);
+       
+        em.persist(admin);
+        registerCredentials(sussexId, password);
+    }
+    
+    public void registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) {
+        Supervisor supervisor = new Supervisor();
+        supervisor.setSussexID(sussexId);
+        supervisor.setName(name);
+        supervisor.setSurname(surname);
+        supervisor.setEmail(email);
+        supervisor.setPhoneNum(phoneNum);
+        supervisor.setDepartment(department);
+       
+        em.persist(supervisor);
+        registerCredentials(sussexId, password);
+    }
+    
+    public void registerStudent(String sussexId, String name, String surname, String email, String course, String password) {
+        Student student = new Student();
+        student.setSussexID(sussexId);
+        student.setName(name);
+        student.setSurname(surname);
+        student.setEmail(email);
+        student.setCourse(course);
+       
+        em.persist(student);
+        registerCredentials(sussexId, password);
+    }
+    
+    private void registerCredentials(String id, String pass) {
+        Credentials credentials = new Credentials();
+        credentials.setSussexID(id);
+        credentials.setPass(pass);
+        
+        em.persist(credentials);
+    }
+    
+    public User getUserByID(String id) {
+        User u = null;
+        try{
+            TypedQuery<User> adminQuery = em.createQuery("SELECT c FROM Administrator c WHERE c.sussexID = :sussexID", User.class);
+            u = adminQuery.setParameter("sussexID", id).getSingleResult();
+        } catch(NoResultException e) {}
+        if (u==null) {
+            try {
+            TypedQuery<User> superQuery = em.createQuery("SELECT c FROM Supervisor c WHERE c.sussexID = :sussexID", User.class);
+                u = superQuery.setParameter("sussexID", id).getSingleResult();
+            } catch(NoResultException e) {}
+        }
+        if (u==null) {
+            try {
+                TypedQuery<User> studentQuery = em.createQuery("SELECT c FROM Student c WHERE c.sussexID = :sussexID", User.class);
+                u = studentQuery.setParameter("sussexID", id).getSingleResult();
+            } catch(NoResultException e) {}
+        }
+        
+        return u;
+    }
+    
+    private List<User> getUsers() {
+        TypedQuery<User> admins = em.createQuery("SELECT u FROM Administrator u", User.class);
+        TypedQuery<User> supervisors = em.createQuery("SELECT u FROM Supervisor u", User.class);
+        TypedQuery<User> students = em.createQuery("SELECT u FROM Student u", User.class);
+        List<User> result = admins.getResultList();
+        result.addAll(supervisors.getResultList());
+        result.addAll(students.getResultList());
+        
+        return result;
+    }
+
+    public boolean userExists(String username) {
+        TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
+        Credentials c = query.setParameter("sussexID", username).getSingleResult();
+        if (c!=null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean verifyPass(String username, String password) {
+        TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
+        String pass = query.setParameter("sussexID", username).getSingleResult().getPass();
+        if (password.equals(pass)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}

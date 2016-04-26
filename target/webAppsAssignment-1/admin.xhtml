@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Project Management</title>
+    </h:head>
+    <h:body>
+        <p:growl id="msgs" showDetail="true" />
+
+        <p:tabView dynamic="true" cache="true">
+            
+            <p:tab title="Reports">
+                <h:form id="reportsForm">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel for="supervisor" value="Supervisor: " />
+                        <p:selectOneMenu id="supervisor" value="#{adminView.supervisor}" style="width:250px">
+                            <f:ajax render="grid" />
+                            <f:selectItem itemLabel="Select supervisor" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{adminView.supervisors}" />
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                   
+                    <h:panelGrid id="grid" columns="2" cellpadding="10">
+                        <p:dataTable id="report" var="project" value="#{adminView.projects}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{project.title}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Topic" />
+                                </f:facet>
+                                <ui:repeat value="#{project.topic}" var="tpc" varStatus="loop">
+                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Required skills"/>
+                                </f:facet>
+                                <h:outputText value="#{project.requiredSkills}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project description" />
+                                </f:facet>
+                                <h:outputText value="#{project.description}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Supervisor" />
+                                </f:facet>
+                                <h:outputText value="#{project.supervisor.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Owner" />
+                                </f:facet>
+                                <h:outputText value="#{project.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Status" />
+                                </f:facet>
+                                <h:outputText value="#{project.status}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register User">
+                <h:form id="registerUserForm">
+                    <p:outputLabel for="role" value="Role:" />
+                    <p:selectOneRadio id="role" value="#{adminView.role}" > 
+                        <f:ajax render="regPanel" />
+                        <f:selectItem itemLabel="Administrator" itemValue="Administrator" />
+                        <f:selectItem itemLabel="Supervisor" itemValue="Supervisor" />
+                        <f:selectItem itemLabel="Student" itemValue="Student" />
+                    </p:selectOneRadio>
+
+                    <p:panel id="regPanel" header="New User">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:outputLabel for="sussexId" value="Sussex-id:" />
+                            <p:inputText id="sussexId" value="#{adminView.registerSussexId}" label="SussexId" required="true">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="firstname" value="Name:" />
+                            <p:inputText id="firstname" value="#{adminView.registerName}" required="true" label="Firstname">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="lastname" value="Surname:" />
+                            <p:inputText id="lastname" value="#{adminView.registerSurname}" label="Lastname" required="true">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="email" value="Email:" />
+                            <p:inputText id="email" value="#{adminView.registerEmail}" label="Email" required="true">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="phoneNum" value="Tel:" />
+                            <p:inputText id="phoneNum" value="#{adminView.registerPhoneNum}" label="PhoneNum" required="true"  disabled="#{!(adminView.supr or adminView.admin)}">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="department" value="Department:" />
+                            <p:inputText id="department" value="#{adminView.registerDepartment}" label="Department" required="true" disabled="#{!adminView.supr}">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="course" value="Course:" />
+                            <p:inputText id="course" value="#{adminView.registerCourse}" label="Course" required="true" disabled="#{!adminView.stud}">
+                                <f:validateLength minimum="2" />
+                            </p:inputText>
+
+                            <p:outputLabel for="password" value="Password:" />
+                            <p:inputText id="password" value="#{adminView.registerPassword}" label="Password" required="true">
+                                <f:validateLength minimum="8" />
+                            </p:inputText>
+
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <p:commandButton value="Register" actionListener="#{adminView.registerUser}" icon="ui-icon-check" />
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register Project Topic">
+                <h:form id="registerTopicForm">
+                    <p:panel>
+                        <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
+                            <f:facet name="header">
+                                Existing topics
+                            </f:facet>
+                            #{xtopic.topic}
+                        </p:dataList>
+
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="topicTitle" value="Topic title:" />
+                            <p:inputTextarea id="topicTitle" value="#{adminView.topicTitle}" label="title" required="true" >
+                                <f:validateLength maximum="100" />
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="topicDescription" value="Topic description:" />
+                            <p:inputTextarea id="topicDescription" value="#{adminView.topicDescription}" label="description" required="true">
+                                <f:validateLength maximum="100" />
+                            </p:inputTextarea>
+                        </h:panelGrid>
+                        <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" >
+                            <f:ajax render="registerTopicForm"/>
+                        </p:commandButton>
+                        <p:commandButton value="Refresh List" update="registerTopicForm"/>
+                    </p:panel>
+                </h:form>
+            </p:tab>
+
+        </p:tabView>
+        
+        <h:form>
+
+            <p:commandButton value="Logout" action="#{adminView.logout}" />
+        </h:form>
+    </h:body>
+</html>
+
