@@ -91,8 +91,11 @@
                                 <f:validateLength maximum="1000" />
                             </p:inputTextarea>
                             
+                            
                             <p:outputLabel for="projectTopics" value="Project topics:" />
-                            <p:inputTextarea id="projectTopics" value="get available from DB" label="topics" required="true" />
+                            <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3">
+                                <f:selectItems value="#{superView.topics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
+                            </p:selectManyCheckbox>
                             
                         </h:panelGrid>
                         <p:commandButton value="Register" actionListener="#{superView.registerProject}" icon="ui-icon-check" />
@@ -175,7 +178,7 @@
 
                             <p:column>
                                 <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}" update="proposals"/>
-                                <p:commandButton value="Decline" action="#{superView.declineProposal}" update="proposals"/>
+                                <p:commandButton value="Decline" action="#{superView.declineProposal(proposal)}" update="proposals"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>

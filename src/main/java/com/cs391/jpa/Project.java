@@ -3,6 +3,7 @@ package com.cs391.jpa;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -43,12 +44,10 @@ public class Project implements Serializable {
     @NotNull
     Status status;
     
-    @OneToOne(targetEntity = Student.class)
-    @JoinColumn(insertable=false, updatable=false)
+    @OneToOne(targetEntity = Student.class, orphanRemoval = true)
     Student owner;
     
-    @OneToOne(targetEntity = Supervisor.class)
-    @JoinColumn(insertable=false, updatable=false)
+    @OneToOne(targetEntity = Supervisor.class, orphanRemoval = true)
     @NotNull
     Supervisor supervisor;
     

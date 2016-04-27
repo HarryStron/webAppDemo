@@ -47,7 +47,6 @@ public class SuperView implements Serializable {
     }
     
     public void registerProject() {
-        projectTopics = new ArrayList<>();
         Supervisor projectSupervisor = (Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
         projectManagement.addNewProject(projectTitle, projectDescription, projectSkills, projectTopics, projectSupervisor);
     }
@@ -64,8 +63,8 @@ public class SuperView implements Serializable {
         projectManagement.editProjectStatus(id, Project.Status.ACCEPTED);
     }
     
-    public void declineProposal() {
-        //remove project from db
+    public void declineProposal(Project proposal) {
+        projectManagement.removeProject(proposal);
     }
 
     public String getProjectTitle() {
@@ -90,6 +89,13 @@ public class SuperView implements Serializable {
 
     public void setProjectSkills(String projectSkills) {
         this.projectSkills = projectSkills;
+    }
+    
+    public void setTopics(List<String> projectTopics){
+        this.projectTopics = new ArrayList<>();
+        for (String id : projectTopics) {
+            this.projectTopics.add(projectManagement.getTopicByID(Integer.parseInt(id)));
+        }
     }
 
     public String getNotifications() {
@@ -116,7 +122,7 @@ public class SuperView implements Serializable {
     }
     
     public List<Project> getProjects() {
-        return projectManagement.getProjects(null); // CHANGE THIS TO CURRENTLY LOGGED IN SUPERVISOR
+        return projectManagement.getProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
     }
      
     public List<Supervisor> getSupervisors() {

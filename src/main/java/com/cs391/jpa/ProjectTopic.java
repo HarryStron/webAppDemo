@@ -22,10 +22,6 @@ public class ProjectTopic implements Serializable {
     
     @NotNull
     String description;
-    
-    @JoinTable
-    @ManyToMany(targetEntity=Project.class)
-    List<Project> projects;
 
     public int getTopicId() {
         return topicId;
@@ -39,10 +35,6 @@ public class ProjectTopic implements Serializable {
         return description;
     }
 
-    public List<Project> getProjects() {
-        return projects;
-    }
-
     public void setTopicId(int topicId) {
         this.topicId = topicId;
     }
@@ -53,10 +45,6 @@ public class ProjectTopic implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
     }
 
     @Override

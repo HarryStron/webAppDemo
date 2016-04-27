@@ -28,6 +28,10 @@ public class ProjectManagement {
         em.persist(project);
     }
     
+    public void removeProject (Project project) {
+        em.remove(em.merge(project));
+    }
+    
     public void addNewTopic(String name, String desc){
         ProjectTopic projectTopic = new ProjectTopic();
         projectTopic.setTopic(name);
@@ -58,10 +62,7 @@ public class ProjectManagement {
     }
     
     public void editProjectStatus(int id, Project.Status status) {
-        TypedQuery<Project> project;
-        project = em.createQuery("SELECT p FROM Project p WHERE p.id = :id", Project.class);
-        project.setParameter("id", id);
-        Project p = project.getSingleResult();
+        Project p = em.find(Project.class, id);
         p.setStatus(status);
         
         em.merge(p);
@@ -79,6 +80,10 @@ public class ProjectManagement {
         List<ProjectTopic> result = topic.getResultList();
         
         return result;
+    }
+    
+    public ProjectTopic getTopicByID(int id) {
+        return em.find(ProjectTopic.class, id);
     }
     
     private Supervisor getSuperFromID(String id){
