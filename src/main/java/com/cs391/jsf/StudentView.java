@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
  
 @Named
@@ -28,7 +29,10 @@ public class StudentView implements Serializable{
         }
     }
     
-    public void logout() {}
+    public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
+        return "index";
+    }
     public void submitProject() {}
     
     public List<ProjectTopic> getSelectedTopics() {

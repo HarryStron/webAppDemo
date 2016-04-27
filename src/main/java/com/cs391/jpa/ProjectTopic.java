@@ -62,7 +62,8 @@ public class ProjectTopic implements Serializable {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + Objects.hashCode(this.topicId);
+        hash = 31 * hash + Objects.hashCode(this.topicId);
+        hash = 31 * hash + Objects.hashCode(this.topic);
         return hash;
     }
 
@@ -78,11 +79,14 @@ public class ProjectTopic implements Serializable {
             return false;
         }
         final ProjectTopic other = (ProjectTopic) obj;
+        if (!Objects.equals(this.topic, other.topic)) {
+            return false;
+        }
         if (!Objects.equals(this.topicId, other.topicId)) {
             return false;
         }
         return true;
     }
 
-    
+       
 }

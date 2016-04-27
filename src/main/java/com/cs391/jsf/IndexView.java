@@ -22,6 +22,8 @@ public class IndexView implements Serializable {
         
         if(userManagement.userExists(username)) {
             if(userManagement.verifyPass(username, password)){
+                FacesContext context = FacesContext.getCurrentInstance();
+                context.getExternalContext().getSessionMap().put("user", userManagement.getUserByID(username));
                 return "admin";
             }
             //wrong password

@@ -12,6 +12,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -26,7 +27,6 @@ public class SuperView implements Serializable {
     private String projectDescription;
     private String projectSkills;
     private List<ProjectTopic> projectTopics;
-    private Supervisor projectSupervisor;
 
     @EJB
     private ProjectManagement projectManagement;
@@ -42,12 +42,13 @@ public class SuperView implements Serializable {
     }
         
     public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
         return "index";
     }
     
     public void registerProject() {
-        projectSupervisor = (Supervisor) userManagement.getUserByID("cs392");
         projectTopics = new ArrayList<>();
+        Supervisor projectSupervisor = (Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
         projectManagement.addNewProject(projectTitle, projectDescription, projectSkills, projectTopics, projectSupervisor);
     }
     
@@ -56,7 +57,7 @@ public class SuperView implements Serializable {
     }
     
     public List<Project> getProposals() {
-        return projectManagement.getProposedProjects("cs392"); //CHANGE TO CURRENT SUPERVISOR
+        return projectManagement.getProposedProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
     }
     
     public void acceptProposal(int id) {

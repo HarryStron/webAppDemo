@@ -6,17 +6,15 @@ import com.cs391.jpa.Project;
 import com.cs391.jpa.ProjectTopic;
 import com.cs391.jpa.Supervisor;
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
-import javax.ejb.EJBException;
 import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
 
 @Named
 @ConversationScoped
@@ -46,13 +44,24 @@ public class AdminView implements Serializable {
     @Inject
     private Conversation conversation;
     
+    @PostConstruct
+    public void postCon() {
+        conversation.begin();
+    }
+    
+    @PreDestroy
+    public void preDest() {
+        conversation.end();
+    }
+    
     public String logout() {
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
         return "index";
     }
      
     public void registerUser() {
-//        System.out.println("ROLE: "+role);
-        //null cases are handled by JPA? going to crash and rollback?
+        System.out.println(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user").toString());
+role= "Administrator";
         switch (role) {
             case "Administrator":
                 userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
@@ -66,30 +75,10 @@ public class AdminView implements Serializable {
             default:
                 break;
         }
-conversation.end();
     }
     
     public void registerTopic() {
-System.out.println(topicTitle + topicDescription);
-try{
         projectManagement.addNewTopic(topicTitle, topicDescription);
-
-
-
-
-}catch (EJBException e) {
-@SuppressWarnings("ThrowableResultIgnored")
-Exception cause = e.getCausedByException();
-if (cause instanceof ConstraintViolationException) {
-    @SuppressWarnings("ThrowableResultIgnored")
-    ConstraintViolationException cve = (ConstraintViolationException) e.getCausedByException();
-    for (Iterator<ConstraintViolation<?>> it = cve.getConstraintViolations().iterator(); it.hasNext();) {
-        ConstraintViolation<? extends Object> v = it.next();
-        System.err.println(v);
-        System.err.println("==>>"+v.getMessage());
-    }
-}
-}
     }
 
     public void setSupervisor(String supervisor) {
@@ -97,8 +86,6 @@ if (cause instanceof ConstraintViolationException) {
     }
 
     public void setRole(String role) {
-conversation.begin();
-//        System.out.println("ROLE: "+role);
         admin = false;
         supr = false;
         stud = false;
