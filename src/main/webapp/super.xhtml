@@ -15,7 +15,8 @@
             <p:poll interval="3" update="notifications" />
         </h:form>
 
-        <p:tabView dynamic="true" cache="true">
+        <p:tabView dynamic="true" cache="true" id="tabView">
+            <p:ajax event="tabChange" update="tabView"/>
             <p:tab title="Reports">
                 <h:form id="reportsForm">
                     <h:panelGrid id="grid" columns="2" cellpadding="10">
@@ -173,8 +174,8 @@
                             </p:column>
 
                             <p:column>
-                                <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}"/>
-                                <p:commandButton value="Decline" action="#{superView.declineProposal}"/>
+                                <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}" update="proposals"/>
+                                <p:commandButton value="Decline" action="#{superView.declineProposal}" update="proposals"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>

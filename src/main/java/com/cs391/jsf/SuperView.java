@@ -93,7 +93,7 @@ public class SuperView implements Serializable {
     }
 
     public String getNotifications() {
-        if((Math.random()*10)>5)
+        if(getProposals().size()<1)
             return "No notifications";
         else
             return "You got an new proposal";

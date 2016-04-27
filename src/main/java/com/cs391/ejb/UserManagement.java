@@ -67,6 +67,13 @@ public class UserManagement {
         em.persist(credentials);
     }
     
+    public String getUserRole(String id) {
+        TypedQuery<Credentials> roleQuery = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
+        Credentials c = roleQuery.setParameter("sussexID", id).getSingleResult();
+        
+        return c.getRole();
+    }
+    
     public User getUserByID(String id) {
         User u = null;
         try{
