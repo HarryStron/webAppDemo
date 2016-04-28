@@ -1,10 +1,14 @@
 package com.cs391.jsf;
 
+import com.cs391.ejb.ProjectManagement;
+import com.cs391.ejb.UserManagement;
 import com.cs391.jpa.Project;
 import com.cs391.jpa.ProjectTopic;
+import com.cs391.jpa.Student;
+import com.cs391.jpa.Supervisor;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -12,66 +16,87 @@ import javax.inject.Named;
 @Named
 @ConversationScoped
 public class StudentView implements Serializable{
-    private List<ProjectTopic> topics;
-    private List<Project> projects;
-    private List<String> supervisors;
-    private String supervisor;
-    private String notifications;
-    private List<ProjectTopic> selectedTopics;
-
-    @PostConstruct
-    public void init() {
-    }
+    private String projectTitle;
+    private String projectDescription;
+    private String projectSkills;
+    private List<ProjectTopic> projectTopics;
+    private Supervisor supervisor;
     
-    public void onSuperChange() {
-        if(supervisor !=null && !supervisor.equals("")){
-            
-        }
-    }
+    @EJB
+    private ProjectManagement projectManagement;
+    
+    @EJB
+    private UserManagement userManagement;
     
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
         return "index";
     }
-    public void submitProject() {}
     
-    public List<ProjectTopic> getSelectedTopics() {
-        return selectedTopics;
-    }
- 
-    public void setSelectedTopics(List<ProjectTopic> selectedTopics) {
-        this.selectedTopics = selectedTopics;
-    }
- 
-    public List<ProjectTopic> getTopics() {
-        return topics;
-    }
-
     public List<Project> getProjects() {
-        return projects;
+        return projectManagement.getProjects(null);
     }
     
-    public List<String> getSupervisors() {
-        return supervisors;
-    }
-
-    public void setTopics(List<ProjectTopic> topics) {
-        this.topics = topics;
+    public void selectProject(int projectId) {
+        Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
+        if(!projectManagement.hasSelectedProject(student)) {
+            projectManagement.selectProject(projectId, student);
+        }
     }
     
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void proposeProject() {
+        projectManagement.proposeProject(projectTitle, projectDescription, projectSkills, projectTopics, supervisor);
+    }
+    
+    public List<Supervisor> getSupervisors() {
+        return userManagement.getSupervisors();
     }
 
-    public void setSupervisors(List<String> supervisors) {
-        this.supervisors = supervisors;
+    public String getProjectTitle() {
+        return projectTitle;
     }
 
-    public void setSupervisor(String supervisor) {
-        this.supervisor = supervisor;
+    public String getProjectDescription() {
+        return projectDescription;
     }
 
-    public String getSupervisor() {
+    public String getProjectSkills() {
+        return projectSkills;
+    }
+
+    public List<ProjectTopic> getProjectTopics() {
+        return projectManagement.getTopics();
+    }
+
+    public ProjectManagement getProjectManagement() {
+        return projectManagement;
+    }
+
+    public Supervisor getSupervisor() {
         return supervisor;
+    }
+
+    public void setProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
+    }
+
+    public void setProjectDescription(String projectDescription) {
+        this.projectDescription = projectDescription;
+    }
+
+    public void setProjectSkills(String projectSkills) {
+        this.projectSkills = projectSkills;
+    }
+
+    public void setProjectTopics(List<ProjectTopic> projectTopics) {
+        this.projectTopics = projectTopics;
+    }
+
+    public void setProjectManagement(ProjectManagement projectManagement) {
+        this.projectManagement = projectManagement;
+    }
+
+    public void setSupervisor(Supervisor supervisor) {
+        this.supervisor = supervisor;
     }
 }

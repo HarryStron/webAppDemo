@@ -165,7 +165,7 @@ role= "Administrator";
     }
      
     public List<Supervisor> getSupervisors() {
-        return projectManagement.getSupervisors();
+        return userManagement.getSupervisors();
     }
     
     public List<ProjectTopic> getTopics() {

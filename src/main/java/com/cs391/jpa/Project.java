@@ -3,14 +3,12 @@ package com.cs391.jpa;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
@@ -19,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Project implements Serializable {
     public enum Status {
-        AVAILABLE, ACCEPTED, PROPOSED;
+        AVAILABLE, ACCEPTED, PROPOSED, SELECTED;
     }
 
     @Id

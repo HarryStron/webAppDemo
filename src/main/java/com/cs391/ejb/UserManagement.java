@@ -126,4 +126,22 @@ public class UserManagement {
             return false;
         }
     }
+        
+    public Supervisor getSuperFromID(String id){
+        TypedQuery<Supervisor> su = em.createQuery("SELECT s FROM Supervisor s WHERE s.sussexID = :id", Supervisor.class);
+        su.setParameter("id", id);
+        
+        try {
+            return su.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    
+    public List<Supervisor> getSupervisors() {
+        TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p.sussexID FROM Supervisor p", Supervisor.class);
+        List<Supervisor> result = supervisor.getResultList();
+        
+        return result;
+    }
 }

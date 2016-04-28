@@ -2,8 +2,10 @@ package com.cs391.ejb;
 
 import com.cs391.jpa.Project;
 import com.cs391.jpa.ProjectTopic;
+import com.cs391.jpa.Student;
 import com.cs391.jpa.Supervisor;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -13,6 +15,9 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class ProjectManagement {
 
+    @EJB
+    UserManagement userManagement;
+    
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
@@ -46,8 +51,49 @@ public class ProjectManagement {
             projects = em.createQuery("SELECT p FROM Project p", Project.class);
         } else {
             projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID", Project.class);
-            projects.setParameter("supervisorID", getSuperFromID(supervisorID));
+            projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
         }
+        
+        return projects.getResultList();
+    }
+    
+    public boolean hasSelectedProject(Student student) {
+        TypedQuery<Project> project = em.createQuery("SELECT p FROM Project p WHERE p.owner = :student", Project.class);
+        project.setParameter("student", student);
+        
+        try{
+            project.getSingleResult(); //if there are no results this line will crash
+            return true;
+        } catch(NoResultException e){
+            return false;
+        }
+    }
+    
+    public void selectProject(int projectId, Student student) {
+        Project p = em.find(Project.class, projectId);
+        p.setOwner(student);
+        p.setStatus(Project.Status.SELECTED);
+        
+        em.merge(p);
+    }
+    
+    public void proposeProject(String title, String desc, String skills, List<ProjectTopic> topics, Supervisor supervisor) {
+        Project project = new Project();
+        project.setTitle(title);
+        project.setDescription(desc);
+        project.setRequiredSkills(skills);
+        project.setTopic(topics);
+        project.setSupervisor(supervisor);
+        project.setStatus(Project.Status.PROPOSED);
+        
+        em.persist(project);
+    }
+    
+    public List<Project> getSelectedProjects(String supervisorID) {
+        TypedQuery<Project> projects;
+        projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID AND p.status = :status", Project.class);
+        projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));     
+        projects.setParameter("status", Project.Status.SELECTED);
         
         return projects.getResultList();
     }
@@ -55,7 +101,7 @@ public class ProjectManagement {
     public List<Project> getProposedProjects(String supervisorID) {
         TypedQuery<Project> projects;
         projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID AND p.status = :status", Project.class);
-        projects.setParameter("supervisorID", getSuperFromID(supervisorID));
+        projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
         projects.setParameter("status", Project.Status.PROPOSED);
         
         return projects.getResultList();
@@ -68,11 +114,11 @@ public class ProjectManagement {
         em.merge(p);
     }
     
-    public List<Supervisor> getSupervisors() {
-        TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p.sussexID FROM Supervisor p", Supervisor.class);
-        List<Supervisor> result = supervisor.getResultList();
+    public void removeOwner(int id) {
+        Project p = em.find(Project.class, id);
+        p.setOwner(null);
         
-        return result;
+        em.merge(p);
     }
     
     public List<ProjectTopic> getTopics() {
@@ -84,17 +130,6 @@ public class ProjectManagement {
     
     public ProjectTopic getTopicByID(int id) {
         return em.find(ProjectTopic.class, id);
-    }
-    
-    private Supervisor getSuperFromID(String id){
-        TypedQuery<Supervisor> su = em.createQuery("SELECT s FROM Supervisor s WHERE s.sussexID = :id", Supervisor.class);
-        su.setParameter("id", id);
-        
-        try {
-            return su.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
-        }
     }
 }
  

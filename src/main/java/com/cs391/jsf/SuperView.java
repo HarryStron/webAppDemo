@@ -10,17 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.Conversation;
 import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
 import javax.inject.Named;
-
 
 @Named
 @ConversationScoped
 public class SuperView implements Serializable {
-    private String notifications;
     private String topicTitle;
     private String topicDescription; 
     private String projectTitle;
@@ -33,9 +29,6 @@ public class SuperView implements Serializable {
     
     @EJB
     private UserManagement userManagement;
-    
-    @Inject
-    private Conversation conversation;
     
     @PostConstruct
     public void init() {
@@ -65,6 +58,11 @@ public class SuperView implements Serializable {
     
     public void declineProposal(Project proposal) {
         projectManagement.removeProject(proposal);
+    }
+    
+    public void declineSelected(int selectedId) {
+        projectManagement.editProjectStatus(selectedId, Project.Status.AVAILABLE);
+        projectManagement.removeOwner(selectedId);
     }
 
     public String getProjectTitle() {
@@ -99,10 +97,12 @@ public class SuperView implements Serializable {
     }
 
     public String getNotifications() {
-        if(getProposals().size()<1)
-            return "No notifications";
+        if(getProposals().size()>0)
+            return "You have a new proposal. Please revise it.";
+        else if (getSelected().size()>0)
+            return "A student has selected a project. Please revise it.";
         else
-            return "You got an new proposal";
+            return "No notifications";
     }
 
     public String getTopicTitle() {
@@ -124,9 +124,13 @@ public class SuperView implements Serializable {
     public List<Project> getProjects() {
         return projectManagement.getProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
     }
+    
+    public List<Project> getSelected() {
+        return projectManagement.getSelectedProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+    }
      
     public List<Supervisor> getSupervisors() {
-        return projectManagement.getSupervisors();
+        return userManagement.getSupervisors();
     }
     
     public List<ProjectTopic> getTopics() {

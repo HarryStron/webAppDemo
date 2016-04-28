@@ -56,7 +56,7 @@
 
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="Owner" />
+                                    <h:outputText value="Student" />
                                 </f:facet>
                                 <h:outputText value="#{project.owner.sussexID}" />
                             </p:column>
@@ -90,15 +90,16 @@
                             <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills" required="true" >
                                 <f:validateLength maximum="1000" />
                             </p:inputTextarea>
-                            
-                            
+                                                        
                             <p:outputLabel for="projectTopics" value="Project topics:" />
                             <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3">
                                 <f:selectItems value="#{superView.topics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
                             </p:selectManyCheckbox>
                             
                         </h:panelGrid>
-                        <p:commandButton value="Register" actionListener="#{superView.registerProject}" icon="ui-icon-check" />
+                        <p:commandButton value="Register" actionListener="#{superView.registerProject}" icon="ui-icon-check"  >
+                            <f:ajax render="registerProjectForm"/>
+                        </p:commandButton>
                     </p:panel>
                 </h:form>
             </p:tab>
@@ -171,7 +172,7 @@
 
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="Owner" />
+                                    <h:outputText value="Student" />
                                 </f:facet>
                                 <h:outputText value="#{proposal.owner.sussexID}" />
                             </p:column>
@@ -179,6 +180,59 @@
                             <p:column>
                                 <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}" update="proposals"/>
                                 <p:commandButton value="Decline" action="#{superView.declineProposal(proposal)}" update="proposals"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+            
+            <p:tab title="Selected">
+                <h:form id="selectedForm">
+                    <h:panelGrid id="selectedGrid" columns="2" cellpadding="10">
+                        <p:dataTable id="selected" var="selected" value="#{superView.selected}"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                    paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{selected.title}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Topic" />
+                                </f:facet>
+                                <ui:repeat value="#{selected.topic}" var="tpc" varStatus="loop">
+                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Required skills"/>
+                                </f:facet>
+                                <h:outputText value="#{selected.requiredSkills}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project description" />
+                                </f:facet>
+                                <h:outputText value="#{selected.description}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student" />
+                                </f:facet>
+                                <h:outputText value="#{selected.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:commandButton value="Accept" action="#{superView.acceptProposal(selected.id)}" update="selected"/>
+                                <p:commandButton value="Decline" action="#{superView.declineSelected(selected.id)}" update="selected"/>
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
