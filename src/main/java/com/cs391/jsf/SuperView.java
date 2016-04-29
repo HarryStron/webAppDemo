@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 @Named
-@ConversationScoped
+@ViewScoped
 public class SuperView implements Serializable {
     private String topicTitle;
     private String topicDescription; 
@@ -46,6 +46,8 @@ public class SuperView implements Serializable {
     
     public void registerTopic() {
         projectManagement.addNewTopic(topicTitle, topicDescription);
+        topicTitle = null;
+        topicDescription = null;
     }
     
     public List<Project> getProposals() {

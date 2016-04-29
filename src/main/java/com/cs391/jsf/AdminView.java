@@ -10,14 +10,12 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
-import javax.enterprise.context.Conversation;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 @Named
-@ConversationScoped
+@ViewScoped
 public class AdminView implements Serializable {
     private String supervisor;
     private String role;
@@ -41,17 +39,15 @@ public class AdminView implements Serializable {
     @EJB
     private UserManagement userManagement;
     
-    @Inject
-    private Conversation conversation;
-    
     @PostConstruct
     public void postCon() {
-        conversation.begin();
+        System.out.println("Post Construct");
+
     }
     
     @PreDestroy
     public void preDest() {
-        conversation.end();
+        System.out.println("Pre Destroy");
     }
     
     public String logout() {
@@ -60,8 +56,6 @@ public class AdminView implements Serializable {
     }
      
     public void registerUser() {
-        System.out.println(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user").toString());
-role= "Administrator";
         switch (role) {
             case "Administrator":
                 userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
@@ -74,11 +68,25 @@ role= "Administrator";
                 break;
             default:
                 break;
-        }
+        }   
+        resetForm();
+    }
+    
+    public void resetForm() {
+        registerSussexId = null;
+        registerName = null;
+        registerSurname = null;
+        registerEmail = null;
+        registerPhoneNum = null;
+        registerCourse = null;
+        registerDepartment = null;
+        registerPassword = null;
     }
     
     public void registerTopic() {
         projectManagement.addNewTopic(topicTitle, topicDescription);
+        topicTitle = null;
+        topicDescription = null;
     }
 
     public void setSupervisor(String supervisor) {
@@ -102,6 +110,7 @@ role= "Administrator";
             default:
                 break;
         }             
+        this.role = role;
     }
 
     public void setTopicTitle(String topicTitle) {
@@ -152,7 +161,7 @@ role= "Administrator";
         this.registerCourse = registerCourse;
     }
 
-    public void setRegisterPassword(String registerPassword) {
+    public void setRegisterPassword(String registerPassword) {        
         this.registerPassword = registerPassword;
     }
 

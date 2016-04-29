@@ -117,7 +117,7 @@
                             </p:inputText>
 
                             <p:outputLabel for="phoneNum" value="Tel:" />
-                            <p:inputText id="phoneNum" value="#{adminView.registerPhoneNum}" label="PhoneNum" required="true"  disabled="#{!(adminView.supr or adminView.admin)}">
+                            <p:inputText id="phoneNum" value="#{adminView.registerPhoneNum}" label="PhoneNum" required="true" disabled="#{!(adminView.supr or adminView.admin)}">
                                 <f:validateLength minimum="2" />
                             </p:inputText>
 
@@ -139,7 +139,7 @@
                         </h:panelGrid>
                     </p:panel>
 
-                    <p:commandButton value="Register" actionListener="#{adminView.registerUser}" icon="ui-icon-check" />
+                    <p:commandButton value="Register" actionListener="#{adminView.registerUser}" icon="ui-icon-check" update="registerUserForm"/>
                 </h:form>
             </p:tab>
 
@@ -164,9 +164,7 @@
                                 <f:validateLength maximum="100" />
                             </p:inputTextarea>
                         </h:panelGrid>
-                        <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" >
-                            <f:ajax render="registerTopicForm"/>
-                        </p:commandButton>
+                        <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>
                         <p:commandButton value="Refresh List" update="registerTopicForm"/>
                     </p:panel>
                 </h:form>

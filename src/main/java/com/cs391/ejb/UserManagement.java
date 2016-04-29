@@ -31,7 +31,7 @@ public class UserManagement {
         admin.setPhoneNum(phoneNum);
        
         em.persist(admin);
-        registerCredentials(sussexId, password);
+        registerCredentials(sussexId, password, "Ad");
     }
     
     public void registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) {
@@ -44,7 +44,7 @@ public class UserManagement {
         supervisor.setDepartment(department);
        
         em.persist(supervisor);
-        registerCredentials(sussexId, password);
+        registerCredentials(sussexId, password, "Su");
     }
     
     public void registerStudent(String sussexId, String name, String surname, String email, String course, String password) {
@@ -56,13 +56,14 @@ public class UserManagement {
         student.setCourse(course);
        
         em.persist(student);
-        registerCredentials(sussexId, password);
+        registerCredentials(sussexId, password, "St");
     }
     
-    private void registerCredentials(String id, String pass) {
+    private void registerCredentials(String id, String pass, String role) {
         Credentials credentials = new Credentials();
         credentials.setSussexID(id);
         credentials.setPass(pass);
+        credentials.setRole(role);
         
         em.persist(credentials);
     }

@@ -12,12 +12,12 @@
             <p:panel id="panel" header="Login">
                 <h:panelGrid columns="2" cellpadding="5">
                     <p:outputLabel for="username" value="Username:" />
-                    <p:inputText id="username">
+                    <p:inputText id="username" value="#{indexView.username}">
                         <f:validateLength minimum="5" />
                     </p:inputText>
 
                     <p:outputLabel for="password" value="Password:" />
-                    <p:password id="password">
+                    <p:password id="password" value="#{indexView.password}">
                         <f:validateLength minimum="8" />
                     </p:password>
                 </h:panelGrid>

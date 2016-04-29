@@ -4,7 +4,6 @@ import java.util.Objects;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @MappedSuperclass
 public abstract class User {

@@ -125,9 +125,7 @@
                                 <f:validateLength maximum="100" />
                             </p:inputTextarea>
                         </h:panelGrid>
-                        <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" >
-                            <f:ajax render="registerTopicForm"/>
-                        </p:commandButton>
+                        <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>                        
                         <p:commandButton value="Refresh List" update="registerTopicForm"/>
                     </p:panel>
                 </h:form>

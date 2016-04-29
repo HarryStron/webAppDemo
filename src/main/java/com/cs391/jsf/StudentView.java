@@ -9,12 +9,12 @@ import com.cs391.jpa.Supervisor;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
  
 @Named
-@ConversationScoped
+@ViewScoped
 public class StudentView implements Serializable{
     private String projectTitle;
     private String projectDescription;

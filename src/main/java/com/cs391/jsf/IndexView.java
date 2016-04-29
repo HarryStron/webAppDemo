@@ -4,23 +4,21 @@ import com.cs391.ejb.UserManagement;
 import com.cs391.jpa.User;
 import java.io.Serializable;
 import javax.ejb.EJB;
-import javax.enterprise.context.ConversationScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 @Named
-@ConversationScoped
+@ViewScoped
 public class IndexView implements Serializable {
-
+    private String username;
+    private String password;
+    
     @EJB
     private UserManagement userManagement;
 
-    public String login() {
-        HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String username = request.getParameter("form:username");
-        String password = request.getParameter("form:password");
-        
+    public String login() {     
         if(userManagement.userExists(username)) {
             if(userManagement.verifyPass(username, password)){
                 FacesContext context = FacesContext.getCurrentInstance();
@@ -40,4 +38,20 @@ public class IndexView implements Serializable {
         //wrong username
         return "index";
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }    
 }
