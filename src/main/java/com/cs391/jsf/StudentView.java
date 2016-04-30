@@ -7,6 +7,7 @@ import com.cs391.jpa.ProjectTopic;
 import com.cs391.jpa.Student;
 import com.cs391.jpa.Supervisor;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
@@ -20,8 +21,8 @@ public class StudentView implements Serializable{
     private String projectDescription;
     private String projectSkills;
     private List<ProjectTopic> projectTopics;
-    private Supervisor supervisor;
-    
+    private String supervisor;
+
     @EJB
     private ProjectManagement projectManagement;
     
@@ -38,20 +39,20 @@ public class StudentView implements Serializable{
     }
     
     public void selectProject(int projectId) {
-        Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
-        if(!projectManagement.hasSelectedProject(student)) {
+        Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");        
+        if(!projectManagement.hasSelectedProject(student)) {            
             projectManagement.selectProject(projectId, student);
         }
     }
     
     public void proposeProject() {
-        projectManagement.proposeProject(projectTitle, projectDescription, projectSkills, projectTopics, supervisor);
+        projectManagement.proposeProject(projectTitle, projectDescription, projectSkills, projectTopics, (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"), userManagement.getSuperFromID(supervisor));
     }
     
     public List<Supervisor> getSupervisors() {
         return userManagement.getSupervisors();
     }
-
+    
     public String getProjectTitle() {
         return projectTitle;
     }
@@ -64,16 +65,27 @@ public class StudentView implements Serializable{
         return projectSkills;
     }
 
+    public String getSupervisor() {
+            return supervisor;
+    }
+
+    public void setSupervisor(String supervisor) {
+        this.supervisor = supervisor;
+    }
+
     public List<ProjectTopic> getProjectTopics() {
         return projectManagement.getTopics();
     }
 
-    public ProjectManagement getProjectManagement() {
-        return projectManagement;
+    public void setProjectTopics(List<String> projectTopicIds) {
+        projectTopics = new ArrayList<>();
+        for (String s : projectTopicIds) {
+            projectTopics.add(projectManagement.getTopicByID(Integer.parseInt(s)));
+        } 
     }
 
-    public Supervisor getSupervisor() {
-        return supervisor;
+    public ProjectManagement getProjectManagement() {
+        return projectManagement;
     }
 
     public void setProjectTitle(String projectTitle) {
@@ -88,15 +100,7 @@ public class StudentView implements Serializable{
         this.projectSkills = projectSkills;
     }
 
-    public void setProjectTopics(List<ProjectTopic> projectTopics) {
-        this.projectTopics = projectTopics;
-    }
-
     public void setProjectManagement(ProjectManagement projectManagement) {
         this.projectManagement = projectManagement;
-    }
-
-    public void setSupervisor(Supervisor supervisor) {
-        this.supervisor = supervisor;
     }
 }

@@ -7,8 +7,6 @@ import com.cs391.jpa.ProjectTopic;
 import com.cs391.jpa.Supervisor;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
@@ -38,17 +36,6 @@ public class AdminView implements Serializable {
     
     @EJB
     private UserManagement userManagement;
-    
-    @PostConstruct
-    public void postCon() {
-        System.out.println("Post Construct");
-
-    }
-    
-    @PreDestroy
-    public void preDest() {
-        System.out.println("Pre Destroy");
-    }
     
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");

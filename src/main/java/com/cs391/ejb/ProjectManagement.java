@@ -77,12 +77,13 @@ public class ProjectManagement {
         em.merge(p);
     }
     
-    public void proposeProject(String title, String desc, String skills, List<ProjectTopic> topics, Supervisor supervisor) {
+    public void proposeProject(String title, String desc, String skills, List<ProjectTopic> topics, Student owner, Supervisor supervisor) {
         Project project = new Project();
         project.setTitle(title);
         project.setDescription(desc);
         project.setRequiredSkills(skills);
         project.setTopic(topics);
+        project.setOwner(owner);
         project.setSupervisor(supervisor);
         project.setStatus(Project.Status.PROPOSED);
         

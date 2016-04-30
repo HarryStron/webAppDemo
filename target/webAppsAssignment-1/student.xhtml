@@ -66,7 +66,7 @@
             </p:tab>
 
             <p:tab title="Propose Project">
-                <h:form id="proposeProjectForm">
+                <h:form id="proposeForm">
                     <p:panel>
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="projectTitle" value="Project title:" />
@@ -89,15 +89,14 @@
                                 <f:selectItems value="#{studentView.projectTopics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
                             </p:selectManyCheckbox>
                             
-                            <p:outputLabel for="supervisor" value="Supervisor: " />                                                          
-                            <p:selectOneRadio id="supervisor" value="#{studentView.supervisor}"  layout="grid" columns="3">
-                                <f:selectItems value="#{studentView.supervisors}" var="supervisor" itemLabel="#{supervisor.sussexID}" itemValue="#{supervisor}"/>
+                            <p:outputLabel for="supervisorz" value="Supervisor: " />                 
+                            <p:selectOneRadio id="supervisorz" value="#{studentView.supervisor}">
+                                <f:selectItems value="#{studentView.supervisors}" var="spr" itemLabel="#{spr}" itemValue="#{spr}"/>
                             </p:selectOneRadio>
-
+                            <p:messages id="messages" autoUpdate="true" for="supervisorz"/>
+        
                         </h:panelGrid>
-                        <p:commandButton value="Propose" actionListener="#{studentView.proposeProject}" icon="ui-icon-check"  >
-                            <f:ajax render="proposeProjectForm"/>
-                        </p:commandButton>
+                        <p:commandButton value="Propose" action="#{studentView.proposeProject}" icon="ui-icon-check" update="proposeForm"/>
                     </p:panel>
                 </h:form>
             </p:tab>
