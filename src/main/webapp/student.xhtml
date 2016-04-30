@@ -9,7 +9,7 @@
         <title>Project Management</title>
     </h:head>
     <h:body>
-        <p:growl id="msgs" showDetail="true" />
+        <p:growl id="growl" showDetail="true" autoUpdate="true"/>
 
         <p:tabView dynamic="true" cache="true" id="tabView">
             <p:ajax event="tabChange" update="tabView"/>
@@ -87,13 +87,14 @@
                             <p:outputLabel for="projectTopics" value="Project topics:" />
                             <p:selectManyCheckbox id="projectTopics" value="#{studentView.projectTopics}" layout="grid" columns="3">
                                 <f:selectItems value="#{studentView.projectTopics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
+                                <f:validateRequired/>
                             </p:selectManyCheckbox>
                             
                             <p:outputLabel for="supervisorz" value="Supervisor: " />                 
                             <p:selectOneRadio id="supervisorz" value="#{studentView.supervisor}">
                                 <f:selectItems value="#{studentView.supervisors}" var="spr" itemLabel="#{spr}" itemValue="#{spr}"/>
+                                <f:validateRequired/>
                             </p:selectOneRadio>
-                            <p:messages id="messages" autoUpdate="true" for="supervisorz"/>
         
                         </h:panelGrid>
                         <p:commandButton value="Propose" action="#{studentView.proposeProject}" icon="ui-icon-check" update="proposeForm"/>

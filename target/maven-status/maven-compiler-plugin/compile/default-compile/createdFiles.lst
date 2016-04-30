@@ -1,5 +1,6 @@
 com\cs391\jpa\Student.class
 com\cs391\jpa\Credentials.class
+com\cs391\jsf\MessageController.class
 com\cs391\jsf\SuperView.class
 com\cs391\jpa\User.class
 com\cs391\jsf\IndexView.class

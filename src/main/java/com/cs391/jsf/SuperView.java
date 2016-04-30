@@ -36,18 +36,27 @@ public class SuperView implements Serializable {
         
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
+        MessageController.displayMessage("User logged out");
         return "index";
     }
     
     public void registerProject() {
         Supervisor projectSupervisor = (Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
-        projectManagement.addNewProject(projectTitle, projectDescription, projectSkills, projectTopics, projectSupervisor);
+        if(!projectManagement.addNewProject(projectTitle, projectDescription, projectSkills, projectTopics, projectSupervisor)){
+            MessageController.displayMessage("Project title already exists");
+        } else {
+            MessageController.displayMessage("Project has been registered");
+        }
     }
     
     public void registerTopic() {
-        projectManagement.addNewTopic(topicTitle, topicDescription);
-        topicTitle = null;
-        topicDescription = null;
+        if(projectManagement.addNewTopic(topicTitle, topicDescription)) {
+            MessageController.displayMessage("Topic has been registered");
+            topicTitle = null;
+            topicDescription = null;
+        } else {
+            MessageController.displayMessage("Topic title already exists");
+        }
     }
     
     public List<Project> getProposals() {
@@ -56,15 +65,18 @@ public class SuperView implements Serializable {
     
     public void acceptProposal(int id) {
         projectManagement.editProjectStatus(id, Project.Status.ACCEPTED);
+        MessageController.displayMessage("Project proposal has been accepted");
     }
     
     public void declineProposal(Project proposal) {
         projectManagement.removeProject(proposal);
+        MessageController.displayMessage("Project proposal has been declined. Project has been removed from DB");
     }
     
     public void declineSelected(int selectedId) {
         projectManagement.editProjectStatus(selectedId, Project.Status.AVAILABLE);
         projectManagement.removeOwner(selectedId);
+        MessageController.displayMessage("Project proposal has been declined. Project can now be requested from another student");
     }
 
     public String getProjectTitle() {

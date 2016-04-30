@@ -9,9 +9,10 @@
         <title>Project Management</title>
     </h:head>
     <h:body>
-        <p:growl id="msgs" showDetail="true" />
+        <p:growl id="growl" showDetail="true" autoUpdate="true"/>
         <h:form>
-            <h:outputText id="notifications" value="#{superView.notifications}" />
+            <h:outputText id="notifications" value="#{superView.notifications}" 
+                          style="font-size: 20px; " />
             <p:poll interval="3" update="notifications" />
         </h:form>
 
@@ -126,7 +127,7 @@
                             </p:inputTextarea>
                         </h:panelGrid>
                         <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>                        
-                        <p:commandButton value="Refresh List" update="registerTopicForm"/>
+                        <p:commandButton value="Refresh List" update="registerTopicForm" immediate="true"/>
                     </p:panel>
                 </h:form>
             </p:tab>

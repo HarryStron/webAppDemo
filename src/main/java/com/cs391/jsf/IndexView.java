@@ -29,12 +29,12 @@ public class IndexView implements Serializable {
                     return "super";
                 } else if(userManagement.getUserRole(currentUser.getSussexID()).equals("St")) {
                     return "student";
-                } 
+                }
             }
-            //wrong password
+            MessageController.displayMessage("Wrong password");
             return "index";                
         }
-        //wrong username
+        MessageController.displayMessage("Wrong username");
         return "index";
     }
 

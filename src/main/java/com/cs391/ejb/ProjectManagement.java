@@ -21,28 +21,64 @@ public class ProjectManagement {
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
-    public void addNewProject(String title, String description, String requiredSkills, List<ProjectTopic> topics, Supervisor supervisor) {
-        Project project = new Project();
-        project.setTitle(title);
-        project.setDescription(description);
-        project.setRequiredSkills(requiredSkills);
-        project.setTopic(topics);
-        project.setSupervisor(supervisor);
-        project.setStatus(Project.Status.AVAILABLE);
+    public boolean addNewProject(String title, String description, String requiredSkills, List<ProjectTopic> topics, Supervisor supervisor) {
+        if(!projectExists(title)) {
+            Project project = new Project();
+            project.setTitle(title);
+            project.setDescription(description);
+            project.setRequiredSkills(requiredSkills);
+            project.setTopic(topics);
+            project.setSupervisor(supervisor);
+            project.setStatus(Project.Status.AVAILABLE);
+
+            em.persist(project);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean projectExists(String title) {
+        TypedQuery<Project> project;
+        project = em.createQuery("SELECT p FROM Project p WHERE p.title = :title", Project.class);
+        project.setParameter("title", title);
         
-        em.persist(project);
+        try{
+            project.getSingleResult();
+            return true;
+        } catch(NoResultException e){
+            return false;
+        }
     }
     
     public void removeProject (Project project) {
         em.remove(em.merge(project));
     }
     
-    public void addNewTopic(String name, String desc){
-        ProjectTopic projectTopic = new ProjectTopic();
-        projectTopic.setTopic(name);
-        projectTopic.setDescription(desc);
+    public boolean addNewTopic(String name, String desc){
+        if(!topicExists(name)) {
+            ProjectTopic projectTopic = new ProjectTopic();
+            projectTopic.setTopic(name);
+            projectTopic.setDescription(desc);
+
+            em.persist(projectTopic);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    private boolean topicExists(String topic) {
+        TypedQuery<ProjectTopic> projectTopic;
+        projectTopic = em.createQuery("SELECT p FROM ProjectTopic p WHERE p.topic = :topic", ProjectTopic.class);
+        projectTopic.setParameter("topic", topic);
         
-        em.persist(projectTopic);
+        try{
+            projectTopic.getSingleResult();
+            return true;
+        } catch(NoResultException e){
+            return false;
+        }
     }
 
     public List<Project> getProjects(String supervisorID) {
@@ -53,6 +89,19 @@ public class ProjectManagement {
             projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID", Project.class);
             projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
         }
+        
+        return projects.getResultList();
+    }
+    
+    public List<Project> getAvailableProjects(String supervisorID) {
+        TypedQuery<Project> projects;
+        if(supervisorID == null) {
+            projects = em.createQuery("SELECT p FROM Project p WHERE p.status = :status", Project.class);
+        } else {
+            projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID AND p.status = :status", Project.class);
+            projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
+        }
+        projects.setParameter("status", Project.Status.AVAILABLE);
         
         return projects.getResultList();
     }

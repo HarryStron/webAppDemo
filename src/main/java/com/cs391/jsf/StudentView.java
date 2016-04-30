@@ -31,22 +31,41 @@ public class StudentView implements Serializable{
     
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
+        MessageController.displayMessage("User logged out");
         return "index";
     }
     
     public List<Project> getProjects() {
-        return projectManagement.getProjects(null);
+        return projectManagement.getAvailableProjects(null);
     }
     
     public void selectProject(int projectId) {
         Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");        
         if(!projectManagement.hasSelectedProject(student)) {            
             projectManagement.selectProject(projectId, student);
+            MessageController.displayMessage("Project selected");
+        } else {
+            MessageController.displayMessage("You have already selected a project");
         }
     }
     
     public void proposeProject() {
-        projectManagement.proposeProject(projectTitle, projectDescription, projectSkills, projectTopics, (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"), userManagement.getSuperFromID(supervisor));
+        Student student = (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");   
+        if(!projectManagement.hasSelectedProject(student)) {            
+            projectManagement.proposeProject(projectTitle, projectDescription, projectSkills, projectTopics, (Student) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user"), userManagement.getSuperFromID(supervisor));
+            MessageController.displayMessage("Project proposed");
+        } else {
+            MessageController.displayMessage("You have already selected a project");
+        }
+        clearForm();
+    }
+    
+    private void clearForm() {
+        projectTitle = null;
+        projectDescription = null;
+        projectSkills = null;
+        projectTopics = null;
+        supervisor = null;
     }
     
     public List<Supervisor> getSupervisors() {

@@ -39,23 +39,30 @@ public class AdminView implements Serializable {
     
     public String logout() {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
+        MessageController.displayMessage("User logged out");
         return "index";
     }
      
     public void registerUser() {
+        boolean done = false;
         switch (role) {
             case "Administrator":
-                userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
+                done = userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
                 break;
             case "Supervisor":
-                userManagement.registerSupervisor(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerDepartment, registerPassword);    
+                done = userManagement.registerSupervisor(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerDepartment, registerPassword);    
                 break;
             case "Student":
-                userManagement.registerStudent(registerSussexId, registerName, registerSurname, registerEmail, registerCourse, registerPassword);    
+                done = userManagement.registerStudent(registerSussexId, registerName, registerSurname, registerEmail, registerCourse, registerPassword);    
                 break;
             default:
                 break;
         }   
+        if(done) {
+            MessageController.displayMessage("User has been registered");
+        } else {
+            MessageController.displayMessage("User already exists");
+        }
         resetForm();
     }
     
@@ -71,9 +78,13 @@ public class AdminView implements Serializable {
     }
     
     public void registerTopic() {
-        projectManagement.addNewTopic(topicTitle, topicDescription);
-        topicTitle = null;
-        topicDescription = null;
+        if(projectManagement.addNewTopic(topicTitle, topicDescription)) {
+            MessageController.displayMessage("Topic has been registered");
+            topicTitle = null;
+            topicDescription = null;
+        } else {
+            MessageController.displayMessage("Topic title already exists");
+        }
     }
 
     public void setSupervisor(String supervisor) {

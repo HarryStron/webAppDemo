@@ -22,41 +22,56 @@ public class UserManagement {
         em.persist(user);
     }
 
-    public void registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) {
-        Administrator admin = new Administrator();
-        admin.setSussexID(sussexId);
-        admin.setName(name);
-        admin.setSurname(surname);
-        admin.setEmail(email);
-        admin.setPhoneNum(phoneNum);
-       
-        em.persist(admin);
-        registerCredentials(sussexId, password, "Ad");
+    public boolean registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) {
+        if(!userExists(sussexId)) {
+            Administrator admin = new Administrator();
+            admin.setSussexID(sussexId);
+            admin.setName(name);
+            admin.setSurname(surname);
+            admin.setEmail(email);
+            admin.setPhoneNum(phoneNum);
+
+            em.persist(admin);
+            registerCredentials(sussexId, password, "Ad");
+            return true;
+        } else {
+            return false;
+        }
     }
     
-    public void registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) {
-        Supervisor supervisor = new Supervisor();
-        supervisor.setSussexID(sussexId);
-        supervisor.setName(name);
-        supervisor.setSurname(surname);
-        supervisor.setEmail(email);
-        supervisor.setPhoneNum(phoneNum);
-        supervisor.setDepartment(department);
-       
-        em.persist(supervisor);
-        registerCredentials(sussexId, password, "Su");
+    public boolean registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) {
+        if(!userExists(sussexId)) {
+            Supervisor supervisor = new Supervisor();
+            supervisor.setSussexID(sussexId);
+            supervisor.setName(name);
+            supervisor.setSurname(surname);
+            supervisor.setEmail(email);
+            supervisor.setPhoneNum(phoneNum);
+            supervisor.setDepartment(department);
+
+            em.persist(supervisor);
+            registerCredentials(sussexId, password, "Su");
+         return true;
+        } else {
+            return false;
+        }
     }
     
-    public void registerStudent(String sussexId, String name, String surname, String email, String course, String password) {
-        Student student = new Student();
-        student.setSussexID(sussexId);
-        student.setName(name);
-        student.setSurname(surname);
-        student.setEmail(email);
-        student.setCourse(course);
-       
-        em.persist(student);
-        registerCredentials(sussexId, password, "St");
+    public boolean registerStudent(String sussexId, String name, String surname, String email, String course, String password) {
+        if(!userExists(sussexId)) {
+            Student student = new Student();
+            student.setSussexID(sussexId);
+            student.setName(name);
+            student.setSurname(surname);
+            student.setEmail(email);
+            student.setCourse(course);
+
+            em.persist(student);
+            registerCredentials(sussexId, password, "St");
+            return true;
+        } else {
+            return false;
+        }
     }
     
     private void registerCredentials(String id, String pass, String role) {
@@ -110,10 +125,10 @@ public class UserManagement {
 
     public boolean userExists(String username) {
         TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
-        Credentials c = query.setParameter("sussexID", username).getSingleResult();
-        if (c!=null) {
+        try {
+            query.setParameter("sussexID", username).getSingleResult();        
             return true;
-        } else {
+        } catch (NoResultException e){
             return false;
         }
     }
