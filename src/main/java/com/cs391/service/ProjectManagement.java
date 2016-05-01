@@ -52,20 +52,12 @@ public class ProjectManagement {
     }
     
     public List<Project> getProjectsBySupervisorId(String id) {
-        TypedQuery<Project> project;
-        project = em.createQuery("SELECT p FROM Project p WHERE p.supervisor.sussexID = :id", Project.class);
-        project.setParameter("id", id);
-        
-        return project.getResultList();
-    }
-
-    public List<Project> getProjects(String supervisorID) {
         TypedQuery<Project> projects;
-        if(supervisorID == null) {
+        if(id == null) {
             projects = em.createQuery("SELECT p FROM Project p", Project.class);
         } else {
-            projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID", Project.class);
-            projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
+            projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor.sussexID = :supervisorID", Project.class);
+            projects.setParameter("supervisorID", id);
         }
         
         return projects.getResultList();

@@ -20,8 +20,8 @@ public class Project {
     @Path("all")
     public Response getAllProjects() {
         try {
-            if (projectManagement.getProjects(null).size() > 1) {
-                String json = new Gson().toJson(projectManagement.getProjects(null));
+            if (projectManagement.getProjectsBySupervisorId(null).size() > 1) {
+                String json = new Gson().toJson(projectManagement.getProjectsBySupervisorId(null));
                 return Response.status(Response.Status.OK).entity(json).build();
             } else {
                 JSONObject jsonObject = new JSONObject("{Error : No projects are registered}");

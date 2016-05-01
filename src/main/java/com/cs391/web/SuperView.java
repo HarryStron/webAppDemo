@@ -145,7 +145,7 @@ public class SuperView implements Serializable {
     }
     
     public List<Project> getProjects() {
-        return projectManagement.getProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+        return projectManagement.getProjectsBySupervisorId(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
     }
     
     public List<Project> getSelected() {

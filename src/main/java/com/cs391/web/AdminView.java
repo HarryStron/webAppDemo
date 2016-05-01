@@ -168,7 +168,7 @@ public class AdminView implements Serializable {
     }
 
     public List<Project> getProjects() {
-        return projectManagement.getProjects(supervisor);
+        return projectManagement.getProjectsBySupervisorId(supervisor);
     }
      
     public List<Supervisor> getSupervisors() {
