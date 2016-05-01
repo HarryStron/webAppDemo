@@ -172,7 +172,7 @@ public class AdminView implements Serializable {
     }
      
     public List<Supervisor> getSupervisors() {
-        return userManagement.getSupervisorIDs();
+        return userManagement.getSupervisors();
     }
     
     public List<ProjectTopic> getTopics() {

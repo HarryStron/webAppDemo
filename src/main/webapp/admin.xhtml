@@ -19,7 +19,7 @@
                         <p:selectOneMenu id="supervisor" value="#{adminView.supervisor}" style="width:250px">
                             <f:ajax render="grid" />
                             <f:selectItem itemLabel="Select supervisor" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{adminView.supervisors}" />
+                            <f:selectItems value="#{adminView.supervisors}" var="spr" itemLabel="#{spr.sussexID}" itemValue="#{spr.sussexID}"/>
                         </p:selectOneMenu>
                     </h:panelGrid>
                    

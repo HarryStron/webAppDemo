@@ -154,13 +154,6 @@ public class UserManagement {
         }
     }
     
-    public List<Supervisor> getSupervisorIDs() {
-        TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p.sussexID FROM Supervisor p", Supervisor.class);
-        List<Supervisor> result = supervisor.getResultList();
-        
-        return result;
-    }
-    
     public List<Supervisor> getSupervisors() {
         TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p FROM Supervisor p", Supervisor.class);
         List<Supervisor> result = supervisor.getResultList();

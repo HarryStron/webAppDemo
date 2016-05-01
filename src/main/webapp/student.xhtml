@@ -113,7 +113,7 @@
                             
                             <p:outputLabel for="supervisorz" value="Supervisor: " />                 
                             <p:selectOneRadio id="supervisorz" value="#{studentView.supervisor}">
-                                <f:selectItems value="#{studentView.supervisors}" var="spr" itemLabel="#{spr}" itemValue="#{spr}"/>
+                                <f:selectItems value="#{studentView.supervisors}" var="spr" itemLabel="#{spr.sussexID}" itemValue="#{spr.sussexID}"/>
                                 <f:validateRequired/>
                             </p:selectOneRadio>
         

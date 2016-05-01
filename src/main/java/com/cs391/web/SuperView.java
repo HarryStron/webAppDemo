@@ -121,9 +121,9 @@ public class SuperView implements Serializable {
 
     public String getNotifications() {
         if(getProposals().size()>0)
-            return "You have a new proposal. Please revise it.";
+            return "You have a new proposal.";
         else if (getSelected().size()>0)
-            return "A student has selected a project. Please revise it.";
+            return "A student has selected a project.";
         else
             return "No notifications";
     }
@@ -150,10 +150,6 @@ public class SuperView implements Serializable {
     
     public List<Project> getSelected() {
         return projectManagement.getSelectedProjects(((Supervisor) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
-    }
-     
-    public List<Supervisor> getSupervisors() {
-        return userManagement.getSupervisorIDs();
     }
     
     public List<ProjectTopic> getTopics() {
