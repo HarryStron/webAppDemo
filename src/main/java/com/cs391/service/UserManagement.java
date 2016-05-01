@@ -133,6 +133,17 @@ public class UserManagement {
         }
     }
     
+    public Supervisor getSuperOfStudent(String id) {
+        TypedQuery<Supervisor> su = em.createQuery("SELECT s.supervisor FROM Project s WHERE s.owner.sussexID = :id", Supervisor.class);
+        su.setParameter("id", id);
+        
+        try {
+            return su.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    
     public boolean verifyPass(String username, String password) {
         TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
         String pass = query.setParameter("sussexID", username).getSingleResult().getPass();
@@ -154,8 +165,15 @@ public class UserManagement {
         }
     }
     
-    public List<Supervisor> getSupervisors() {
+    public List<Supervisor> getSupervisorIDs() {
         TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p.sussexID FROM Supervisor p", Supervisor.class);
+        List<Supervisor> result = supervisor.getResultList();
+        
+        return result;
+    }
+    
+     public List<Supervisor> getSupervisors() {
+        TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p FROM Supervisor p", Supervisor.class);
         List<Supervisor> result = supervisor.getResultList();
         
         return result;

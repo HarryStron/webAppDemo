@@ -3,11 +3,13 @@ com\cs391\service\ProjectStore.class
 org\netbeans\rest\application\config\ApplicationConfig.class
 com\cs391\web\MessageController.class
 com\cs391\data\Administrator.class
+com\cs391\rest\Project.class
 com\cs391\web\AdminView.class
 com\cs391\data\Project$Status.class
 com\cs391\data\Project.class
 com\cs391\data\Student.class
 com\cs391\data\Supervisor.class
+com\cs391\rest\Supervisor.class
 com\cs391\web\SuperView.class
 com\cs391\data\Credentials.class
 com\cs391\data\User.class

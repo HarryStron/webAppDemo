@@ -51,6 +51,14 @@ public class ProjectManagement {
         }
     }
     
+    public List<Project> getProjectsBySupervisorId(String id) {
+        TypedQuery<Project> project;
+        project = em.createQuery("SELECT p FROM Project p WHERE p.supervisor.sussexID = :id", Project.class);
+        project.setParameter("id", id);
+        
+        return project.getResultList();
+    }
+    
     public void removeProject (Project project) {
         em.remove(em.merge(project));
     }

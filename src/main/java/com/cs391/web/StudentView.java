@@ -79,7 +79,7 @@ public class StudentView implements Serializable{
     }
     
     public List<Supervisor> getSupervisors() {
-        return userManagement.getSupervisors();
+        return userManagement.getSupervisorIDs();
     }
     
     public String getProjectTitle() {
