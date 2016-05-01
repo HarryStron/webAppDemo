@@ -11,9 +11,10 @@
     <h:body>
         <p:growl id="growl" showDetail="true" autoUpdate="true"/>
         <h:form>
-            <h:outputText id="notifications" value="#{superView.notifications}" 
-                          style="font-size: 20px; " />
-            <p:poll interval="3" update="notifications" />
+            <h2>
+                <h:outputText id="notifications" value="#{superView.notifications}" />
+                <p:poll interval="3" update="notifications" />
+            </h2>
         </h:form>
 
         <p:tabView dynamic="true" cache="true" id="tabView">
@@ -79,12 +80,12 @@
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="projectTitle" value="Project title:" />
                             <p:inputTextarea id="projectTitle" value="#{superView.projectTitle}" label="title" required="true" >
-                                <f:validateLength maximum="200" />
+                                <f:validateLength maximum="200" minimum="5" />
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectDescription" value="Project description:" />
                             <p:inputTextarea id="projectDescription" value="#{superView.projectDescription}" label="description" required="true" >
-                                <f:validateLength maximum="1000" />
+                                <f:validateLength maximum="1000" minimum="5" />
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectSkills" value="Project skills:" />
@@ -118,7 +119,7 @@
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="topicTitle" value="Topic title:" />
                             <p:inputTextarea id="topicTitle" value="#{superView.topicTitle}" label="title" required="true" >
-                                <f:validateLength maximum="100" />
+                                <f:validateLength maximum="100" minimum="5" />
                             </p:inputTextarea>
 
                             <p:outputLabel for="topicDescription" value="Topic description:" />

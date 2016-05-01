@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
         <title>Project Management</title>
     </h:head>
@@ -13,55 +14,75 @@
 
         <p:tabView dynamic="true" cache="true" id="tabView">
             <p:ajax event="tabChange" update="tabView"/>
-            <p:tab title="Available Projects">
+            <p:tab title="Projects">
                 <h:form id="projectsForm">
-                    <h:panelGrid id="grid" columns="2" cellpadding="10">
-                        <p:dataTable id="projectsTable" var="project" value="#{studentView.projects}"
-                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                                     paginator="true" rows="10">
+                    <c:if test="#{!studentView.selected}">
+                        <h:panelGrid id="grid" columns="2" cellpadding="10">
+                            <p:dataTable id="projectsTable" var="project" value="#{studentView.projects}"
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                         paginator="true" rows="10">
 
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Project title" />
-                                </f:facet>
-                                <h:outputText value="#{project.title}" />
-                            </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Project title" />
+                                    </f:facet>
+                                    <h:outputText value="#{project.title}" />
+                                </p:column>
 
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Topic" />
-                                </f:facet>
-                                <ui:repeat value="#{project.topic}" var="tpc" varStatus="loop">
-                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
-                                </ui:repeat>
-                            </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Topic" />
+                                    </f:facet>
+                                    <ui:repeat value="#{project.topic}" var="tpc" varStatus="loop">
+                                        <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                    </ui:repeat>
+                                </p:column>
 
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Required skills"/>
-                                </f:facet>
-                                <h:outputText value="#{project.requiredSkills}" />
-                            </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Required skills"/>
+                                    </f:facet>
+                                    <h:outputText value="#{project.requiredSkills}" />
+                                </p:column>
 
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Project description" />
-                                </f:facet>
-                                <h:outputText value="#{project.description}" />
-                            </p:column>
-                            
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Supervisor" />
-                                </f:facet>
-                                <h:outputText value="#{project.supervisor.sussexID}" />
-                            </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Project description" />
+                                    </f:facet>
+                                    <h:outputText value="#{project.description}" />
+                                </p:column>
 
-                            <p:column>
-                                <p:commandButton value="Select" action="#{studentView.selectProject(project.id)}" update="projectsTable"/>
-                            </p:column>
-                        </p:dataTable>
-                    </h:panelGrid>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="Supervisor" />
+                                    </f:facet>
+                                    <h:outputText value="#{project.supervisor.sussexID}" />
+                                </p:column>
+
+                                <p:column>
+                                    <p:commandButton value="Select" action="#{studentView.selectProject(project.id)}" update="@form"/>
+                                </p:column>
+                            </p:dataTable>
+                        </h:panelGrid>
+                    </c:if>
+                    
+                    <c:if test="#{studentView.selected}">
+                        <p:outputPanel>
+                            <h1>Personal Project Information</h1>
+                            <h2>Title: </h2>
+                            <h:outputText value="#{studentView.myProject.title}"/>
+                            <h2>Description: </h2>
+                            <h:outputText value="#{studentView.myProject.description}"/>
+                            <h2>Topic: </h2>
+                            <ui:repeat value="#{studentView.myProject.topic}" var="tpc" varStatus="loop">
+                                <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                            </ui:repeat>                            
+                            <h2>Supervisor: </h2>
+                            <h:outputText value="#{studentView.myProject.supervisor.sussexID}"/>
+                            <h2>Current status: </h2>
+                            <h:outputText value="#{studentView.myProject.status}"/>
+                        </p:outputPanel>
+                    </c:if>
                 </h:form>
             </p:tab>
 
