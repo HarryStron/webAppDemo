@@ -30,6 +30,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.cs391.rest.Project.class);
+        resources.add(com.cs391.rest.Student.class);
         resources.add(com.cs391.rest.Supervisor.class);
     }
     

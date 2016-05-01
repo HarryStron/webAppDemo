@@ -58,6 +58,18 @@ public class ProjectManagement {
         
         return project.getResultList();
     }
+
+    public List<Project> getProjects(String supervisorID) {
+        TypedQuery<Project> projects;
+        if(supervisorID == null) {
+            projects = em.createQuery("SELECT p FROM Project p", Project.class);
+        } else {
+            projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID", Project.class);
+            projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
+        }
+        
+        return projects.getResultList();
+    }
     
     public void removeProject (Project project) {
         em.remove(em.merge(project));
@@ -87,18 +99,6 @@ public class ProjectManagement {
         } catch(NoResultException e){
             return false;
         }
-    }
-
-    public List<Project> getProjects(String supervisorID) {
-        TypedQuery<Project> projects;
-        if(supervisorID == null) {
-            projects = em.createQuery("SELECT p FROM Project p", Project.class);
-        } else {
-            projects = em.createQuery("SELECT p FROM Project p WHERE p.supervisor = :supervisorID", Project.class);
-            projects.setParameter("supervisorID", userManagement.getSuperFromID(supervisorID));
-        }
-        
-        return projects.getResultList();
     }
     
     public List<Project> getAvailableProjects(String supervisorID) {

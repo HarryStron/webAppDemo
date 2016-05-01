@@ -20,8 +20,13 @@ public class Supervisor {
     @Path("all")
     public Response getAllSupervisors() {
         try {
-            String json = new Gson().toJson(userManagement.getSupervisors());
-            return Response.status(Response.Status.OK).entity(json).build();
+            if(userManagement.getSupervisors().size() > 1) {
+                String json = new Gson().toJson(userManagement.getSupervisors());
+                return Response.status(Response.Status.OK).entity(json).build();
+            } else {
+                JSONObject jsonObject = new JSONObject("{Error : No supervisors are registered}");
+                return Response.status(Response.Status.OK).entity(jsonObject.toString()).build();
+            }
         } catch (EJBException e) {
             JSONObject jsonObject = new JSONObject("{Error : Something went wrong}");
             return Response.status(Response.Status.NOT_FOUND).entity(jsonObject.toString()).build();
@@ -36,7 +41,7 @@ public class Supervisor {
                 String json = new Gson().toJson(userManagement.getSuperOfStudent(id));
                 return Response.status(Response.Status.OK).entity(json).build();
             } else {
-                JSONObject jsonObject = new JSONObject("{Error : Student has no supervisor assigned}");
+                JSONObject jsonObject = new JSONObject("{Error : No supervisor found for student}");
                 return Response.status(Response.Status.OK).entity(jsonObject.toString()).build();
             }
         } catch (EJBException e) {

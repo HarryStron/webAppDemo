@@ -111,17 +111,6 @@ public class UserManagement {
         
         return u;
     }
-    
-    private List<User> getUsers() {
-        TypedQuery<User> admins = em.createQuery("SELECT u FROM Administrator u", User.class);
-        TypedQuery<User> supervisors = em.createQuery("SELECT u FROM Supervisor u", User.class);
-        TypedQuery<User> students = em.createQuery("SELECT u FROM Student u", User.class);
-        List<User> result = admins.getResultList();
-        result.addAll(supervisors.getResultList());
-        result.addAll(students.getResultList());
-        
-        return result;
-    }
 
     public boolean userExists(String username) {
         TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
@@ -172,10 +161,25 @@ public class UserManagement {
         return result;
     }
     
-     public List<Supervisor> getSupervisors() {
+    public List<Supervisor> getSupervisors() {
         TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p FROM Supervisor p", Supervisor.class);
         List<Supervisor> result = supervisor.getResultList();
         
         return result;
+    }
+     
+    public List<Student> getStudents() {
+        TypedQuery<Student> student = em.createQuery("SELECT s FROM Student s", Student.class);
+        List<Student> result = student.getResultList();
+
+        return result;
+    }
+    
+    public List<Student> getStudentsBySupervisorId(String id) {
+        TypedQuery<Student> student;
+        student = em.createQuery("SELECT p.owner FROM Project p WHERE p.supervisor.sussexID = :id", Student.class);
+        student.setParameter("id", id);
+        
+        return student.getResultList();
     }
 }
