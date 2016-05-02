@@ -15,8 +15,6 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
  
 @Named
 @ViewScoped
@@ -39,19 +37,6 @@ public class StudentView implements Serializable{
         User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
         context.getExternalContext().getSessionMap().put("user", currentUser);          
         FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
-    }
-    
-    public String logout() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.getExternalContext().getSessionMap().remove("user");
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {
-            request.logout();
-            MessageController.displayMessage("User logged out");
-        } catch (ServletException ex) {
-            MessageController.displayMessage("User log out failed");            
-        }
-        return "index?faces-redirect=true";
     }
     
     public List<Project> getProjects() {
