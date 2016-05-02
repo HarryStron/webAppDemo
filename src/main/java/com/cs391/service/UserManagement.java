@@ -5,7 +5,14 @@ import com.cs391.data.Credentials;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import com.cs391.data.User;
+import com.cs391.data.UserGroup;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -18,12 +25,14 @@ public class UserManagement {
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
-    public void addNewUser(User user) {
-        em.persist(user);
-    }
-
-    public boolean registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) {
+    public boolean registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            String paswdToStoreInDB = bigInt.toString(16);
+            
             Administrator admin = new Administrator();
             admin.setSussexID(sussexId);
             admin.setName(name);
@@ -32,15 +41,21 @@ public class UserManagement {
             admin.setPhoneNum(phoneNum);
 
             em.persist(admin);
-            registerCredentials(sussexId, password, "Ad");
+            registerCredentials(sussexId, paswdToStoreInDB, "administrator");
             return true;
         } else {
             return false;
         }
     }
     
-    public boolean registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) {
+    public boolean registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            String paswdToStoreInDB = bigInt.toString(16);
+            
             Supervisor supervisor = new Supervisor();
             supervisor.setSussexID(sussexId);
             supervisor.setName(name);
@@ -50,15 +65,21 @@ public class UserManagement {
             supervisor.setDepartment(department);
 
             em.persist(supervisor);
-            registerCredentials(sussexId, password, "Su");
+            registerCredentials(sussexId, paswdToStoreInDB, "supervisor");
          return true;
         } else {
             return false;
         }
     }
     
-    public boolean registerStudent(String sussexId, String name, String surname, String email, String course, String password) {
+    public boolean registerStudent(String sussexId, String name, String surname, String email, String course, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(password.getBytes("UTF-8"));
+            byte[] digest = md.digest();
+            BigInteger bigInt = new BigInteger(1, digest);
+            String paswdToStoreInDB = bigInt.toString(16);
+            
             Student student = new Student();
             student.setSussexID(sussexId);
             student.setName(name);
@@ -67,7 +88,7 @@ public class UserManagement {
             student.setCourse(course);
 
             em.persist(student);
-            registerCredentials(sussexId, password, "St");
+            registerCredentials(sussexId, paswdToStoreInDB, "student");
             return true;
         } else {
             return false;
@@ -79,15 +100,19 @@ public class UserManagement {
         credentials.setSussexID(id);
         credentials.setPass(pass);
         credentials.setRole(role);
-        
         em.persist(credentials);
+        
+        UserGroup userGroup = new UserGroup();
+        userGroup.setSussexID(id);
+        userGroup.setGroupName(role);
+        em.persist(userGroup);
     }
     
     public String getUserRole(String id) {
-        TypedQuery<Credentials> roleQuery = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
-        Credentials c = roleQuery.setParameter("sussexID", id).getSingleResult();
+        TypedQuery<UserGroup> roleQuery = em.createQuery("SELECT c FROM UserGroup c WHERE c.sussexID = :sussexID", UserGroup.class);
+        UserGroup c = roleQuery.setParameter("sussexID", id).getSingleResult();
         
-        return c.getRole();
+        return c.getGroupName();
     }
     
     public User getUserByID(String id) {
@@ -130,16 +155,6 @@ public class UserManagement {
             return su.getSingleResult();
         } catch (NoResultException e) {
             return null;
-        }
-    }
-    
-    public boolean verifyPass(String username, String password) {
-        TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
-        String pass = query.setParameter("sussexID", username).getSingleResult().getPass();
-        if (password.equals(pass)) {
-            return true;
-        } else {
-            return false;
         }
     }
         

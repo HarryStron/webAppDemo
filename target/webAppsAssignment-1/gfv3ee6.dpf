@@ -7,4 +7,16 @@
       <description>Keep a copy of the generated servlet class' java code.</description>
     </property>
   </jsp-config>
+  <security-role-mapping>
+    <role-name>administrator</role-name>
+    <group-name>administrator</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>supervisor</role-name>
+    <group-name>supervisor</group-name>
+  </security-role-mapping>
+  <security-role-mapping>
+    <role-name>student</role-name>
+    <group-name>student</group-name>
+  </security-role-mapping>
 </glassfish-web-app>

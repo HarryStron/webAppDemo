@@ -5,6 +5,7 @@ import com.cs391.service.UserManagement;
 import com.cs391.data.Project;
 import com.cs391.data.ProjectTopic;
 import com.cs391.data.Supervisor;
+import com.cs391.data.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @Named
 @ViewScoped
@@ -32,11 +35,22 @@ public class SuperView implements Serializable {
     
     @PostConstruct
     public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
+        context.getExternalContext().getSessionMap().put("user", currentUser);          
+        FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
     }
         
     public String logout() {
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
-        MessageController.displayMessage("User logged out");
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().remove("user");
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.logout();
+            MessageController.displayMessage("User logged out");
+        } catch (ServletException ex) {
+            MessageController.displayMessage("User log out failed");            
+        }
         return "index?faces-redirect=true";
     }
     

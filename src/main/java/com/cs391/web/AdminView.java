@@ -5,12 +5,18 @@ import com.cs391.service.UserManagement;
 import com.cs391.data.Project;
 import com.cs391.data.ProjectTopic;
 import com.cs391.data.Supervisor;
+import com.cs391.data.User;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 @Named
 @ViewScoped
@@ -37,27 +43,46 @@ public class AdminView implements Serializable {
     @EJB
     private UserManagement userManagement;
     
+    @PostConstruct
+    public void init() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
+        context.getExternalContext().getSessionMap().put("user", currentUser);          
+        FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
+    }
+    
     public String logout() {
-        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().remove("user");
-        MessageController.displayMessage("User logged out");
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getExternalContext().getSessionMap().remove("user");
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.logout();
+            MessageController.displayMessage("User logged out");
+        } catch (ServletException ex) {
+            MessageController.displayMessage("User log out failed");            
+        }
         return "index?faces-redirect=true";
     }
      
     public void registerUser() {
         boolean done = false;
-        switch (role) {
-            case "Administrator":
-                done = userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
-                break;
-            case "Supervisor":
-                done = userManagement.registerSupervisor(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerDepartment, registerPassword);    
-                break;
-            case "Student":
-                done = userManagement.registerStudent(registerSussexId, registerName, registerSurname, registerEmail, registerCourse, registerPassword);    
-                break;
-            default:
-                break;
-        }   
+        try {
+            switch (role) {
+                case "Administrator":
+                    done = userManagement.registerAdmin(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerPassword);                             
+                    break;
+                case "Supervisor":
+                    done = userManagement.registerSupervisor(registerSussexId, registerName, registerSurname, registerEmail, registerPhoneNum, registerDepartment, registerPassword);    
+                    break;
+                case "Student":
+                    done = userManagement.registerStudent(registerSussexId, registerName, registerSurname, registerEmail, registerCourse, registerPassword);    
+                    break;
+                default:
+                    break;
+            }   
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            MessageController.displayMessage("Something went wrong");
+        }
         if(done) {
             MessageController.displayMessage("User has been registered");
         } else {
