@@ -5,6 +5,7 @@ import com.cs391.data.ProjectTopic;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import java.util.List;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -21,6 +22,7 @@ public class ProjectManagement {
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
+    @RolesAllowed({"supervisor"})
     public boolean addNewProject(String title, String description, String requiredSkills, List<ProjectTopic> topics, Supervisor supervisor) {
         if(!projectExists(title)) {
             Project project = new Project();
@@ -63,10 +65,12 @@ public class ProjectManagement {
         return projects.getResultList();
     }
     
+    @RolesAllowed({"supervisor"})
     public void removeProject (Project project) {
         em.remove(em.merge(project));
     }
     
+    @RolesAllowed({"administrator", "supervisor"})
     public boolean addNewTopic(String name, String desc){
         if(!topicExists(name)) {
             ProjectTopic projectTopic = new ProjectTopic();
@@ -125,6 +129,7 @@ public class ProjectManagement {
         return project.getSingleResult(); 
     }
     
+    @RolesAllowed({"student"})
     public void selectProject(int projectId, Student student) {
         Project p = em.find(Project.class, projectId);
         p.setOwner(student);
@@ -133,6 +138,7 @@ public class ProjectManagement {
         em.merge(p);
     }
     
+    @RolesAllowed({"student"})
     public void proposeProject(String title, String desc, String skills, List<ProjectTopic> topics, Student owner, Supervisor supervisor) {
         Project project = new Project();
         project.setTitle(title);
@@ -164,6 +170,7 @@ public class ProjectManagement {
         return projects.getResultList();
     }
     
+    @RolesAllowed({"supervisor"})
     public void editProjectStatus(int id, Project.Status status) {
         Project p = em.find(Project.class, id);
         p.setStatus(status);
@@ -171,6 +178,7 @@ public class ProjectManagement {
         em.merge(p);
     }
     
+    @RolesAllowed({"supervisor"})
     public void removeOwner(int id) {
         Project p = em.find(Project.class, id);
         p.setOwner(null);

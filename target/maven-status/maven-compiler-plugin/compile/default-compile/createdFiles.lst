@@ -1,5 +1,4 @@
 com\cs391\service\ProjectManagement.class
-com\cs391\service\ProjectStore.class
 org\netbeans\rest\application\config\ApplicationConfig.class
 com\cs391\web\MessageController.class
 com\cs391\rest\Student.class

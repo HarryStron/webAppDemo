@@ -43,7 +43,6 @@ public class UserGroup implements Serializable {
     public int hashCode() {
         int hash = 7;
         hash = 47 * hash + Objects.hashCode(this.sussexID);
-        hash = 47 * hash + Objects.hashCode(this.groupname);
         return hash;
     }
 
@@ -57,9 +56,6 @@ public class UserGroup implements Serializable {
         }
         final UserGroup other = (UserGroup) obj;
         if (!Objects.equals(this.sussexID, other.sussexID)) {
-            return false;
-        }
-        if (!Objects.equals(this.groupname, other.groupname)) {
             return false;
         }
         return true;

@@ -11,8 +11,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -25,6 +24,7 @@ public class UserManagement {
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
+    @RolesAllowed({"administrator"})
     public boolean registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -48,6 +48,7 @@ public class UserManagement {
         }
     }
     
+    @RolesAllowed({"administrator"})
     public boolean registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -72,6 +73,7 @@ public class UserManagement {
         }
     }
     
+    @RolesAllowed({"administrator"})
     public boolean registerStudent(String sussexId, String name, String surname, String email, String course, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
