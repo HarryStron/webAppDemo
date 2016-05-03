@@ -15,6 +15,6 @@ com\cs391\data\Credentials.class
 com\cs391\data\User.class
 com\cs391\data\UserGroup.class
 com\cs391\data\ProjectTopic.class
-com\cs391\web\IndexView.class
 com\cs391\web\StudentView.class
 com\cs391\service\UserManagement.class
+com\cs391\web\Tools.class

@@ -13,6 +13,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import static javax.ejb.TransactionAttributeType.MANDATORY;
+import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -24,6 +27,7 @@ public class UserManagement {
     @PersistenceContext(unitName = "WebappsDB")
     private EntityManager em;
 
+    @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"administrator"})
     public boolean registerAdmin(String sussexId, String name, String surname, String email, String phoneNum, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
@@ -48,6 +52,7 @@ public class UserManagement {
         }
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"administrator"})
     public boolean registerSupervisor(String sussexId, String name, String surname, String email, String phoneNum, String department, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
@@ -73,6 +78,7 @@ public class UserManagement {
         }
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"administrator"})
     public boolean registerStudent(String sussexId, String name, String surname, String email, String course, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         if(!userExists(sussexId)) {
@@ -97,26 +103,23 @@ public class UserManagement {
         }
     }
     
+    @TransactionAttribute(MANDATORY)
     private void registerCredentials(String id, String pass, String role) {
         Credentials credentials = new Credentials();
         credentials.setSussexID(id);
         credentials.setPass(pass);
         credentials.setRole(role);
         em.persist(credentials);
-        
+
         UserGroup userGroup = new UserGroup();
         userGroup.setSussexID(id);
         userGroup.setGroupName(role);
         em.persist(userGroup);
+        em.flush();
     }
     
-    public String getUserRole(String id) {
-        TypedQuery<UserGroup> roleQuery = em.createQuery("SELECT c FROM UserGroup c WHERE c.sussexID = :sussexID", UserGroup.class);
-        UserGroup c = roleQuery.setParameter("sussexID", id).getSingleResult();
-        
-        return c.getGroupName();
-    }
-    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator", "supervisor", "student"})
     public User getUserByID(String id) {
         User u = null;
         try{
@@ -139,6 +142,8 @@ public class UserManagement {
         return u;
     }
 
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator"})
     public boolean userExists(String username) {
         TypedQuery<Credentials> query = em.createQuery("SELECT c FROM Credentials c WHERE c.sussexID = :sussexID", Credentials.class);
         try {
@@ -149,6 +154,7 @@ public class UserManagement {
         }
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
     public Supervisor getSuperOfStudent(String id) {
         TypedQuery<Supervisor> su = em.createQuery("SELECT s.supervisor FROM Project s WHERE s.owner.sussexID = :id", Supervisor.class);
         su.setParameter("id", id);
@@ -159,7 +165,9 @@ public class UserManagement {
             return null;
         }
     }
-        
+      
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator", "supervisor", "student"})
     public Supervisor getSuperFromID(String id){
         TypedQuery<Supervisor> su = em.createQuery("SELECT s FROM Supervisor s WHERE s.sussexID = :id", Supervisor.class);
         su.setParameter("id", id);
@@ -171,6 +179,7 @@ public class UserManagement {
         }
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
     public List<Supervisor> getSupervisors() {
         TypedQuery<Supervisor> supervisor = em.createQuery("SELECT p FROM Supervisor p", Supervisor.class);
         List<Supervisor> result = supervisor.getResultList();
@@ -178,6 +187,7 @@ public class UserManagement {
         return result;
     }
      
+    @TransactionAttribute(REQUIRES_NEW)
     public List<Student> getStudents() {
         TypedQuery<Student> student = em.createQuery("SELECT s FROM Student s", Student.class);
         List<Student> result = student.getResultList();
@@ -185,6 +195,7 @@ public class UserManagement {
         return result;
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
     public List<Student> getStudentsBySupervisorId(String id) {
         TypedQuery<Student> student;
         student = em.createQuery("SELECT p.owner FROM Project p WHERE p.supervisor.sussexID = :id", Student.class);
