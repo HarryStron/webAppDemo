@@ -2,6 +2,7 @@ package com.cs391.service;
 
 import com.cs391.data.Administrator;
 import com.cs391.data.Credentials;
+import com.cs391.data.Log;
 import com.cs391.data.Project;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
@@ -11,12 +12,15 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.MANDATORY;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -47,6 +51,7 @@ public class UserManagement {
 
             em.persist(admin);
             registerCredentials(sussexId, paswdToStoreInDB, "administrator");
+            writeTolog("Registered a new administrator with ID: "+sussexId);
             return true;
         } else {
             return false;
@@ -72,7 +77,8 @@ public class UserManagement {
             supervisor.setDepartment(department);
 
             em.persist(supervisor);
-            registerCredentials(sussexId, paswdToStoreInDB, "supervisor");
+            registerCredentials(sussexId, paswdToStoreInDB, "supervisor");            
+            writeTolog("Registered a new supervisor with ID: "+sussexId);
          return true;
         } else {
             return false;
@@ -98,6 +104,7 @@ public class UserManagement {
 
             em.persist(student);
             registerCredentials(sussexId, paswdToStoreInDB, "student");
+            writeTolog("Registered a new student with ID: "+sussexId);
             return true;
         } else {
             return false;
@@ -203,5 +210,14 @@ public class UserManagement {
         student.setParameter("status", Project.Status.ACCEPTED);
         
         return student.getResultList();
+    }
+    
+    @TransactionAttribute(MANDATORY)
+    private void writeTolog(String info) {
+        Log log = new Log();
+            log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+            log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
+            log.setInfo(info);
+            em.persist(log);  
     }
 }

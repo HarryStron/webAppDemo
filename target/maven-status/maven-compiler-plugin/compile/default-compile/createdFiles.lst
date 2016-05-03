@@ -1,3 +1,4 @@
+com\cs391\data\Log.class
 com\cs391\service\ProjectManagement.class
 org\netbeans\rest\application\config\ApplicationConfig.class
 com\cs391\web\MessageController.class

@@ -72,7 +72,7 @@ public class SuperView implements Serializable {
     }
     
     public void acceptProposal(int id) {
-        projectManagement.editProjectStatus(id, Project.Status.ACCEPTED);
+        projectManagement.acceptProposal(id);
         MessageController.displayMessage("Project proposal has been accepted");
     }
     
@@ -82,8 +82,7 @@ public class SuperView implements Serializable {
     }
     
     public void declineSelected(int selectedId) {
-        projectManagement.editProjectStatus(selectedId, Project.Status.AVAILABLE);
-        projectManagement.removeOwner(selectedId);
+        projectManagement.declineSelected(selectedId);
         MessageController.displayMessage("Project proposal has been declined. Project can now be requested from another student");
     }
 

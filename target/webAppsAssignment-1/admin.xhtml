@@ -168,6 +168,45 @@
                     </p:panel>
                 </h:form>
             </p:tab>
+            
+            <p:tab title="Release Projects">
+                <h:form id="releaseForm">
+                    <h:panelGrid id="grid" columns="2" cellpadding="10">
+                        <p:dataTable id="releaseTable" var="project" value="#{adminView.acceptedProjects}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{project.title}" />
+                            </p:column>                           
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Supervisor" />
+                                </f:facet>
+                                <h:outputText value="#{project.supervisor.sussexID}" />
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student" />
+                                </f:facet>
+                                <h:outputText value="#{project.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:commandButton value="Release" action="#{adminView.releaseProject(project.id)}" update="@form"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Remove" action="#{adminView.removeProject(project)}" update="@form"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
 
         </p:tabView>
         

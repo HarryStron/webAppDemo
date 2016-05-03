@@ -1,9 +1,13 @@
 package com.cs391.service;
 
+import com.cs391.data.Log;
 import com.cs391.data.Project;
 import com.cs391.data.ProjectTopic;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
+import com.cs391.data.User;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
@@ -11,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import static javax.ejb.TransactionAttributeType.MANDATORY;
 import static javax.ejb.TransactionAttributeType.REQUIRES_NEW;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -38,6 +43,7 @@ public class ProjectManagement {
             project.setStatus(Project.Status.AVAILABLE);
 
             em.persist(project);
+            writeTolog("Registered project with title: "+title);
             return true;
         } else {
             return false;
@@ -73,9 +79,10 @@ public class ProjectManagement {
     }
     
     @TransactionAttribute(REQUIRES_NEW)
-    @RolesAllowed({"supervisor"})
+    @RolesAllowed({"administrator", "supervisor"})
     public void removeProject (Project project) {
         em.remove(em.merge(project));
+        writeTolog("Deleted project with title: "+project.getTitle());
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -87,6 +94,7 @@ public class ProjectManagement {
             projectTopic.setDescription(desc);
 
             em.persist(projectTopic);
+            writeTolog("Added topic with title: "+projectTopic.getTopic());
             return true;
         } else {
             return false;
@@ -154,6 +162,7 @@ public class ProjectManagement {
         p.setStatus(Project.Status.SELECTED);
         
         em.merge(p);
+        writeTolog("Selected a project with title: "+p.getTitle());
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -168,7 +177,8 @@ public class ProjectManagement {
         project.setSupervisor(supervisor);
         project.setStatus(Project.Status.PROPOSED);
         
-        em.persist(project);
+        em.persist(project);        
+        writeTolog("Proposed a project with title: "+title);
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -194,21 +204,46 @@ public class ProjectManagement {
     }
     
     @TransactionAttribute(REQUIRES_NEW)
-    @RolesAllowed({"supervisor"})
-    public void editProjectStatus(int id, Project.Status status) {
-        Project p = em.find(Project.class, id);
-        p.setStatus(status);
+    @RolesAllowed({"administrator"})
+    public List<Project> getAcceptedProjects() {
+        TypedQuery<Project> projects;
+        projects = em.createQuery("SELECT p FROM Project p WHERE p.status = :status", Project.class);
+        projects.setParameter("status", Project.Status.ACCEPTED);
         
-        em.merge(p);
+        return projects.getResultList();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"supervisor"})
-    public void removeOwner(int id) {
+    public void acceptProposal(int id) {
         Project p = em.find(Project.class, id);
-        p.setOwner(null);
-        
+        p.setStatus(Project.Status.ACCEPTED);
         em.merge(p);
+        
+        writeTolog("Accepted proposed/selected project with title: "+p.getTitle());
+    }
+    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator"})
+    public void releaseProject(int id) {
+        Project p = em.find(Project.class, id);
+        p.setStatus(Project.Status.AVAILABLE);
+        p.setOwner(null);
+        em.merge(p);
+        
+        writeTolog("Released accepted project with title: "+p.getTitle());
+    }
+    
+    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"supervisor"})
+    public void declineSelected(int id) {
+        Project p = em.find(Project.class, id);
+        p.setStatus(Project.Status.AVAILABLE);
+        p.setOwner(null);
+        em.merge(p);
+        
+        writeTolog("Declined selected project with title: "+p.getTitle());
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -224,6 +259,15 @@ public class ProjectManagement {
     @RolesAllowed({"administrator", "supervisor", "student"})
     public ProjectTopic getTopicByID(int id) {
         return em.find(ProjectTopic.class, id);
+    }
+    
+    @TransactionAttribute(MANDATORY)
+    private void writeTolog(String info) {
+        Log log = new Log();
+        log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+        log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
+        log.setInfo(info);
+        em.persist(log);  
     }
 }
  

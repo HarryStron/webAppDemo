@@ -76,6 +76,18 @@ public class AdminView implements Serializable {
         resetForm();
     }
     
+    public List<Project> getAcceptedProjects() {
+        return projectManagement.getAcceptedProjects();
+    }
+    
+    public void releaseProject(int id) {
+        projectManagement.releaseProject(id);
+    }
+    
+    public void removeProject(Project p) {
+        projectManagement.removeProject(p);
+    }
+    
     public void resetForm() {
         registerSussexId = null;
         registerName = null;
