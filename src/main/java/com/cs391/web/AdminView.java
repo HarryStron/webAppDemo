@@ -1,5 +1,6 @@
 package com.cs391.web;
 
+import com.cs391.data.Log;
 import com.cs391.service.ProjectManagement;
 import com.cs391.service.UserManagement;
 import com.cs391.data.Project;
@@ -21,6 +22,7 @@ import javax.inject.Named;
 public class AdminView implements Serializable {
     private String supervisor;
     private String role;
+    private String user;
     private boolean admin;
     private boolean supr;
     private boolean stud;
@@ -47,6 +49,7 @@ public class AdminView implements Serializable {
         User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
         context.getExternalContext().getSessionMap().put("user", currentUser);          
         FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
+        userManagement.logLastLogin();
     }
     
     public void registerUser() {
@@ -74,6 +77,22 @@ public class AdminView implements Serializable {
             MessageController.displayMessage("User already exists");
         }
         resetForm();
+    }
+    
+    public List<User> getUsers() {
+        return userManagement.getUsers();
+    }
+    
+    public void setUser(String user) {
+        this.user = user;
+    }
+    
+    public String getUser() {
+        return user;
+    }
+    
+    public List<Log> getLogs() {
+        return projectManagement.getLogs(user);
     }
     
     public List<Project> getAcceptedProjects() {

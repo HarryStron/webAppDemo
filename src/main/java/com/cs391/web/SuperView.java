@@ -37,6 +37,7 @@ public class SuperView implements Serializable {
         User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
         context.getExternalContext().getSessionMap().put("user", currentUser);          
         FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
+        userManagement.logLastLogin();
     }
         
     private void clearForm() {

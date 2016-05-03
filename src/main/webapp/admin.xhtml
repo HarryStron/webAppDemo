@@ -169,6 +169,47 @@
                 </h:form>
             </p:tab>
             
+            <p:tab title="Logs">
+                <h:form id="logsForm">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel for="user" value="User: " />
+                        <p:selectOneMenu id="user" value="#{adminView.user}" style="width:250px">
+                            <f:ajax render="grid" />
+                            <f:selectItem itemLabel="Select user" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{adminView.users}" var="usr" itemLabel="#{usr.sussexID}" itemValue="#{usr.sussexID}"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                   
+                    <h:panelGrid id="grid" columns="2" cellpadding="10">
+                        <p:dataTable id="report" var="log" value="#{adminView.logs}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="User" />
+                                </f:facet>
+                                <h:outputText value="#{log.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Info"/>
+                                </f:facet>
+                                <h:outputText value="#{log.info}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Date_Time" />
+                                </f:facet>
+                                <h:outputText value="#{log.eventDate}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+            
             <p:tab title="Release Projects">
                 <h:form id="releaseForm">
                     <h:panelGrid id="grid" columns="2" cellpadding="10">

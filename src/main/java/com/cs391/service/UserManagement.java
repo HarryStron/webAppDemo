@@ -148,6 +148,20 @@ public class UserManagement {
         
         return u;
     }
+    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator"})
+    public List<User> getUsers() {
+        List<User> users = null;
+        TypedQuery<User> adminQuery = em.createQuery("SELECT c FROM Administrator c", User.class);
+        users = adminQuery.getResultList();
+        TypedQuery<User> superQuery = em.createQuery("SELECT c FROM Supervisor c", User.class);
+        users.addAll(superQuery.getResultList());
+        TypedQuery<User> studentQuery = em.createQuery("SELECT c FROM Student c", User.class);
+        users.addAll(studentQuery.getResultList());
+        
+        return users;
+    }
 
     @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"administrator"})
@@ -212,12 +226,27 @@ public class UserManagement {
         return student.getResultList();
     }
     
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator", "supervisor", "student"})
+    public void logLastLogin(){
+        TypedQuery<Log> logQ;
+        logQ = em.createQuery("SELECT l FROM Log l WHERE l.sussexID = :id AND l.info = :info", Log.class);
+        logQ.setParameter("id", ((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+        logQ.setParameter("info", "Last-login");
+        try {
+            em.remove(em.merge(logQ.getSingleResult()));
+            writeTolog("Last-login");
+        } catch(NoResultException e) {
+            writeTolog("Last-login");
+        }
+    }
+    
     @TransactionAttribute(MANDATORY)
     private void writeTolog(String info) {
         Log log = new Log();
-            log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
-            log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
-            log.setInfo(info);
-            em.persist(log);  
+        log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+        log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
+        log.setInfo(info);
+        em.persist(log);  
     }
 }

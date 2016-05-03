@@ -269,5 +269,18 @@ public class ProjectManagement {
         log.setInfo(info);
         em.persist(log);  
     }
+    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator"})
+    public List<Log> getLogs(String userID) {
+        TypedQuery<Log> query;
+        if(userID != null) {
+            query = em.createQuery("SELECT l FROM Log l WHERE l.sussexID = :sussexID", Log.class);
+            query.setParameter("sussexID", userID);
+        } else {
+            query = em.createQuery("SELECT l FROM Log l", Log.class);
+        }
+        return query.getResultList();
+    }
 }
  
