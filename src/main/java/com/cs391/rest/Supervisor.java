@@ -35,7 +35,7 @@ public class Supervisor {
         
     @GET
     @Path("{id}")
-    public Response getProjectBySupervisorID(@PathParam("id") String id) {       
+    public Response getSupervisorByStudentID(@PathParam("id") String id) {       
         try {
             if(userManagement.getSuperOfStudent(id) != null) {
                 String json = new Gson().toJson(userManagement.getSuperOfStudent(id));

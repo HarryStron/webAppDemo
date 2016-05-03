@@ -2,6 +2,7 @@ package com.cs391.service;
 
 import com.cs391.data.Administrator;
 import com.cs391.data.Credentials;
+import com.cs391.data.Project;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import com.cs391.data.User;
@@ -115,7 +116,6 @@ public class UserManagement {
         userGroup.setSussexID(id);
         userGroup.setGroupName(role);
         em.persist(userGroup);
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -198,8 +198,9 @@ public class UserManagement {
     @TransactionAttribute(REQUIRES_NEW)
     public List<Student> getStudentsBySupervisorId(String id) {
         TypedQuery<Student> student;
-        student = em.createQuery("SELECT p.owner FROM Project p WHERE p.supervisor.sussexID = :id", Student.class);
+        student = em.createQuery("SELECT p.owner FROM Project p WHERE p.supervisor.sussexID = :id AND p.status = :status", Student.class);
         student.setParameter("id", id);
+        student.setParameter("status", Project.Status.ACCEPTED);
         
         return student.getResultList();
     }

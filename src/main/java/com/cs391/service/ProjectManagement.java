@@ -76,7 +76,6 @@ public class ProjectManagement {
     @RolesAllowed({"supervisor"})
     public void removeProject (Project project) {
         em.remove(em.merge(project));
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -88,7 +87,6 @@ public class ProjectManagement {
             projectTopic.setDescription(desc);
 
             em.persist(projectTopic);
-            em.flush();
             return true;
         } else {
             return false;
@@ -156,7 +154,6 @@ public class ProjectManagement {
         p.setStatus(Project.Status.SELECTED);
         
         em.merge(p);
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -172,7 +169,6 @@ public class ProjectManagement {
         project.setStatus(Project.Status.PROPOSED);
         
         em.persist(project);
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -204,7 +200,6 @@ public class ProjectManagement {
         p.setStatus(status);
         
         em.merge(p);
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
@@ -214,7 +209,6 @@ public class ProjectManagement {
         p.setOwner(null);
         
         em.merge(p);
-        em.flush();
     }
     
     @TransactionAttribute(REQUIRES_NEW)
