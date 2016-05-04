@@ -12,7 +12,7 @@
         <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
 
         <p:tabView dynamic="true" cache="true">
-            <p:tab title="Reports">
+            <p:tab title="Project Reports">
                 <h:form id="reportsForm">
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel for="supervisor" value="Supervisor: " />
@@ -77,6 +77,62 @@
                                     <h:outputText value="Status" />
                                 </f:facet>
                                 <h:outputText value="#{project.status}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                </h:form>
+            </p:tab>
+            
+            <p:tab title="Student Reports">
+                <h:form id="studentReportsForm">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel for="status" value="User status: " />
+                        <p:selectOneMenu id="status" value="#{adminView.userStatus}" style="width:250px">
+                            <f:ajax render="grid" />
+                            <f:selectItem itemLabel="Select status"  noSelectionOption="true" />
+                            <f:selectItem itemLabel="Has chosen project" itemValue="chosen"/>
+                            <f:selectItem itemLabel="Has not chosen project" itemValue="not_chosen"/>
+                        </p:selectOneMenu>
+                    </h:panelGrid>
+                   
+                    <h:panelGrid id="grid" columns="5" cellpadding="10">
+                        <p:dataTable id="report" var="student" value="#{adminView.studentsByStatus}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                     paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student ID" />
+                                </f:facet>
+                                <h:outputText value="#{student.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Name" />
+                                </f:facet>
+                                <h:outputText value="#{student.name}" />
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Surname" />
+                                </f:facet>
+                                <h:outputText value="#{student.surname}" />
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Email" />
+                                </f:facet>
+                                <h:outputText value="#{student.email}" />
+                            </p:column>
+                            
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student" />
+                                </f:facet>
+                                <h:outputText value="#{student.course}" />
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>

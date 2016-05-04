@@ -5,6 +5,7 @@ import com.cs391.service.ProjectManagement;
 import com.cs391.service.UserManagement;
 import com.cs391.data.Project;
 import com.cs391.data.ProjectTopic;
+import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import com.cs391.data.User;
 import java.io.Serializable;
@@ -36,6 +37,7 @@ public class AdminView implements Serializable {
     private String registerPassword;
     private String topicTitle;
     private String topicDescription;   
+    private String userStatus;
     
     @EJB
     private ProjectManagement projectManagement;
@@ -149,6 +151,16 @@ public class AdminView implements Serializable {
         }             
         this.role = role;
     }
+    
+    public List<Student> getStudentsByStatus() {
+        if(userStatus!=null && userStatus.equals("chosen")){
+            return userManagement.getStudentsByStatus(true);
+        } else if(userStatus!=null && userStatus.equals("not_chosen")) {
+            return userManagement.getStudentsByStatus(false);
+        } else {
+            return userManagement.getStudents();
+        }
+    }
 
     public void setTopicTitle(String topicTitle) {
         this.topicTitle = topicTitle;
@@ -180,6 +192,10 @@ public class AdminView implements Serializable {
 
     public void setRegisterSurname(String registerSurname) {
         this.registerSurname = registerSurname;
+    }
+
+    public void setUserStatus(String userStatus) {
+        this.userStatus = userStatus;
     }
 
     public void setRegisterDepartment(String registerDepartment) {
@@ -220,6 +236,10 @@ public class AdminView implements Serializable {
 
     public String getSupervisor() {
         return supervisor;
+    }
+
+    public String getUserStatus() {
+        return userStatus;
     }
 
     public String getRegisterSussexId() {

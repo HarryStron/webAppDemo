@@ -116,7 +116,6 @@ public class UserManagement {
         Credentials credentials = new Credentials();
         credentials.setSussexID(id);
         credentials.setPass(pass);
-        credentials.setRole(role);
         em.persist(credentials);
 
         UserGroup userGroup = new UserGroup();
@@ -239,5 +238,20 @@ public class UserManagement {
         log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
         log.setInfo(info);
         em.persist(log);  
+    }
+    
+    @TransactionAttribute(REQUIRES_NEW)
+    @RolesAllowed({"administrator"})
+    public List<Student> getStudentsByStatus(boolean hasChosen) {
+        List<Student> studs = em.createQuery("SELECT p.owner FROM Project p WHERE p.status = :status", Student.class).setParameter("status", Project.Status.ACCEPTED).getResultList();
+        studs.addAll(em.createQuery("SELECT p.owner FROM Project p WHERE p.status = :status", Student.class).setParameter("status", Project.Status.SELECTED).getResultList());
+        studs.addAll(em.createQuery("SELECT p.owner FROM Project p WHERE p.status = :status", Student.class).setParameter("status", Project.Status.PROPOSED).getResultList());
+        
+        if(!hasChosen){
+            List<Student> allStudents = getStudents();
+            allStudents.removeAll(studs);
+            studs = allStudents;
+        }        
+        return studs;
     }
 }

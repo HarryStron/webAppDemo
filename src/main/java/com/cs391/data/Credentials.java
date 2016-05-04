@@ -12,8 +12,6 @@ public class Credentials implements Serializable{
     String sussexID;
     @NotNull
     String pass;
-    @NotNull
-    String role;
     
     public String getSussexID() {
         return sussexID;
@@ -22,10 +20,6 @@ public class Credentials implements Serializable{
     public String getPass() {
         return pass;
     }
-    
-    public String getRole() {
-        return role;
-    }
 
     public void setSussexID(String sussexID) {
         this.sussexID = sussexID;
@@ -33,10 +27,6 @@ public class Credentials implements Serializable{
 
     public void setPass(String pass) {
         this.pass = pass;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     @Override
