@@ -9,7 +9,7 @@
         <title>Project Management</title>
     </h:head>
     <h:body>
-        <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+        <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
 
         <p:tabView dynamic="true" cache="true">
             <p:tab title="Reports">
@@ -97,42 +97,42 @@
                         <h:panelGrid columns="2" cellpadding="5">
                             <p:outputLabel for="sussexId" value="Sussex-id:" />
                             <p:inputText id="sussexId" value="#{adminView.registerSussexId}" label="SussexId" required="true">
-                                <f:validateLength minimum="2" />
+                                <f:validateLength minimum="5" maximum="5"/>
                             </p:inputText>
 
                             <p:outputLabel for="firstname" value="Name:" />
                             <p:inputText id="firstname" value="#{adminView.registerName}" required="true" label="Firstname">
-                                <f:validateLength minimum="2" />
+                                <f:validateLength minimum="3" maximum="20"/>
                             </p:inputText>
 
                             <p:outputLabel for="lastname" value="Surname:" />
                             <p:inputText id="lastname" value="#{adminView.registerSurname}" label="Lastname" required="true">
-                                <f:validateLength minimum="2" />
+                                <f:validateLength minimum="3" maximum="20"/>
                             </p:inputText>
 
                             <p:outputLabel for="email" value="Email:" />
                             <p:inputText id="email" value="#{adminView.registerEmail}" label="Email" required="true">
-                                <f:validateLength minimum="2" />
+                                <f:validateRegex pattern="([^.@]+)(\.[^.@]+)*@([^.@]+\.)+([^.@]+)"/>
                             </p:inputText>
 
                             <p:outputLabel for="phoneNum" value="Tel:" />
                             <p:inputText id="phoneNum" value="#{adminView.registerPhoneNum}" label="PhoneNum" required="true" disabled="#{!(adminView.supr or adminView.admin)}">
-                                <f:validateLength minimum="2" />
+                                <f:validateRegex pattern="\d{10}"/>
                             </p:inputText>
 
                             <p:outputLabel for="department" value="Department:" />
                             <p:inputText id="department" value="#{adminView.registerDepartment}" label="Department" required="true" disabled="#{!adminView.supr}">
-                                <f:validateLength minimum="2" />
+                                <f:validateLength minimum="3" maximum="20" />
                             </p:inputText>
 
                             <p:outputLabel for="course" value="Course:" />
                             <p:inputText id="course" value="#{adminView.registerCourse}" label="Course" required="true" disabled="#{!adminView.stud}">
-                                <f:validateLength minimum="2" />
+                                <f:validateLength minimum="3" maximum="20"/>
                             </p:inputText>
 
                             <p:outputLabel for="password" value="Password:" />
                             <p:inputText id="password" value="#{adminView.registerPassword}" label="Password" required="true">
-                                <f:validateLength minimum="8" />
+                                <f:validateLength minimum="6" maximum="18" />
                             </p:inputText>
 
                         </h:panelGrid>
@@ -155,12 +155,12 @@
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="topicTitle" value="Topic title:" />
                             <p:inputTextarea id="topicTitle" value="#{adminView.topicTitle}" label="title" required="true" >
-                                <f:validateLength maximum="100" />
+                                <f:validateLength minimum="5" maximum="100" />
                             </p:inputTextarea>
 
                             <p:outputLabel for="topicDescription" value="Topic description:" />
-                            <p:inputTextarea id="topicDescription" value="#{adminView.topicDescription}" label="description" required="true">
-                                <f:validateLength maximum="100" />
+                            <p:inputTextarea id="topicDescription" value="#{adminView.topicDescription}" label="description">
+                                <f:validateLength maximum="100" />                                
                             </p:inputTextarea>
                         </h:panelGrid>
                         <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>
@@ -248,11 +248,9 @@
                     </h:panelGrid>
                 </h:form>
             </p:tab>
-
         </p:tabView>
         
         <h:form>
-
             <p:commandButton value="Logout" action="#{tools.logout}" />
         </h:form>
     </h:body>

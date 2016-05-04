@@ -92,8 +92,7 @@
         <role-name>administrator</role-name>
     </security-role>
     <security-role>
-        <description>supervisors group
-</description>
+        <description>supervisors group</description>
         <role-name>supervisor</role-name>
     </security-role>
     <security-role>

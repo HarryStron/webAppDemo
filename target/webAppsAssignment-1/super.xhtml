@@ -9,7 +9,7 @@
         <title>Project Management</title>
     </h:head>
     <h:body>
-        <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+        <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
         <h:form>
             <h2>
                 <h:outputText id="notifications" value="#{superView.notifications}" />
@@ -89,12 +89,12 @@
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectSkills" value="Project skills:" />
-                            <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills" required="true" >
+                            <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills">
                                 <f:validateLength maximum="1000" />
                             </p:inputTextarea>
                                                         
                             <p:outputLabel for="projectTopics" value="Project topics:" />
-                            <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3">
+                            <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3" required="true" >
                                 <f:selectItems value="#{superView.topics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
                             </p:selectManyCheckbox>
                             
@@ -119,11 +119,11 @@
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="topicTitle" value="Topic title:" />
                             <p:inputTextarea id="topicTitle" value="#{superView.topicTitle}" label="title" required="true" >
-                                <f:validateLength maximum="100" minimum="5" />
+                                <f:validateLength minimum="5" maximum="100" />
                             </p:inputTextarea>
 
                             <p:outputLabel for="topicDescription" value="Topic description:" />
-                            <p:inputTextarea id="topicDescription" value="#{superView.topicDescription}" label="description" required="true">
+                            <p:inputTextarea id="topicDescription" value="#{superView.topicDescription}" label="description">
                                 <f:validateLength maximum="100" />
                             </p:inputTextarea>
                         </h:panelGrid>

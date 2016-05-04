@@ -17,11 +17,6 @@ public abstract class User {
     String surname;
     
     @NotNull
-//    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
-//            + "[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
-//            + "(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9]"
-//            + "(?:[a-z0-9-]*[a-z0-9])?",
-//            message = "{invalid.email}")
     String email;
 
     public String getSussexID() {

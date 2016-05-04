@@ -30,14 +30,16 @@ public class SuperView implements Serializable {
     
     @EJB
     private UserManagement userManagement;
-    
+            
     @PostConstruct
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
         User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
-        context.getExternalContext().getSessionMap().put("user", currentUser);          
-        FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
-        userManagement.logLastLogin();
+        context.getExternalContext().getSessionMap().put("user", currentUser);
+        if(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("logged") == null) {
+            context.getExternalContext().getSessionMap().put("logged", true);
+            userManagement.logLastLogin();
+        }
     }
         
     private void clearForm() {

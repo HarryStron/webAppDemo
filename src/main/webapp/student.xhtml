@@ -10,7 +10,7 @@
         <title>Project Management</title>
     </h:head>
     <h:body>
-        <p:growl id="growl" showDetail="true" autoUpdate="true"/>
+        <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
 
         <p:tabView dynamic="true" cache="true" id="tabView">
             <p:ajax event="tabChange" update="tabView"/>
@@ -92,27 +92,27 @@
                         <h:panelGrid columns="2" cellpadding="10">
                             <p:outputLabel for="projectTitle" value="Project title:" />
                             <p:inputTextarea id="projectTitle" value="#{studentView.projectTitle}" label="title" required="true" >
-                                <f:validateLength maximum="200" />
+                                <f:validateLength maximum="200" minimum="5" />
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectDescription" value="Project description:" />
                             <p:inputTextarea id="projectDescription" value="#{studentView.projectDescription}" label="description" required="true" >
-                                <f:validateLength maximum="1000" />
+                                <f:validateLength maximum="1000" minimum="5" />
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectSkills" value="Project skills:" />
-                            <p:inputTextarea id="projectSkills" value="#{studentView.projectSkills}" label="skills" required="true" >
+                            <p:inputTextarea id="projectSkills" value="#{studentView.projectSkills}" label="skills" >
                                 <f:validateLength maximum="1000" />
                             </p:inputTextarea>
                             
                             <p:outputLabel for="projectTopics" value="Project topics:" />
-                            <p:selectManyCheckbox id="projectTopics" value="#{studentView.projectTopics}" layout="grid" columns="3">
+                            <p:selectManyCheckbox id="projectTopics" value="#{studentView.projectTopics}" layout="grid" columns="3" required="true">
                                 <f:selectItems value="#{studentView.projectTopics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
                                 <f:validateRequired/>
                             </p:selectManyCheckbox>
                             
                             <p:outputLabel for="supervisorz" value="Supervisor: " />                 
-                            <p:selectOneRadio id="supervisorz" value="#{studentView.supervisor}">
+                            <p:selectOneRadio id="supervisorz" value="#{studentView.supervisor}" required="true">
                                 <f:selectItems value="#{studentView.supervisors}" var="spr" itemLabel="#{spr.sussexID}" itemValue="#{spr.sussexID}"/>
                                 <f:validateRequired/>
                             </p:selectOneRadio>

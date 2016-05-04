@@ -16,6 +16,7 @@ public class Tools implements Serializable {
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
             request.logout();
+            context.getExternalContext().getSessionMap().put("logged", null);
             MessageController.displayMessage("User logged out");
         } catch (ServletException ex) {
             MessageController.displayMessage("User log out failed");            

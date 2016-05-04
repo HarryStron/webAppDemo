@@ -47,9 +47,7 @@ public class AdminView implements Serializable {
     public void init() {
         FacesContext context = FacesContext.getCurrentInstance();
         User currentUser = userManagement.getUserByID(context.getExternalContext().getUserPrincipal().toString());
-        context.getExternalContext().getSessionMap().put("user", currentUser);          
-        FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().toString();
-        userManagement.logLastLogin();
+        context.getExternalContext().getSessionMap().put("user", currentUser);
     }
     
     public void registerUser() {

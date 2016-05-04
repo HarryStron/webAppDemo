@@ -229,16 +229,7 @@ public class UserManagement {
     @TransactionAttribute(REQUIRES_NEW)
     @RolesAllowed({"administrator", "supervisor", "student"})
     public void logLastLogin(){
-        TypedQuery<Log> logQ;
-        logQ = em.createQuery("SELECT l FROM Log l WHERE l.sussexID = :id AND l.info = :info", Log.class);
-        logQ.setParameter("id", ((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
-        logQ.setParameter("info", "Last-login");
-        try {
-            em.remove(em.merge(logQ.getSingleResult()));
-            writeTolog("Last-login");
-        } catch(NoResultException e) {
-            writeTolog("Last-login");
-        }
+        writeTolog("Login");
     }
     
     @TransactionAttribute(MANDATORY)
