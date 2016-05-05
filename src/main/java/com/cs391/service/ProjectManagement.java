@@ -6,6 +6,7 @@ import com.cs391.data.ProjectTopic;
 import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import com.cs391.data.User;
+import com.cs391.thrift.TimestampService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -20,6 +21,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 
 @Stateless
 public class ProjectManagement {
@@ -267,7 +273,19 @@ public class ProjectManagement {
         log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
         log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
         log.setInfo(info);
-        em.persist(log);  
+        em.persist(log); 
+           
+        try {
+            TTransport transport;
+            transport = new TSocket("localhost", 10000);
+            transport.open();
+            TProtocol protocol = new TBinaryProtocol(transport);
+            TimestampService.Client client = new TimestampService.Client(protocol);
+            String result = client.stamp();
+            System.out.println("RPC Call: " +result);
+        } catch (TException e){
+            System.err.println("Failed to receive timestamp");
+        }
     }
     
     @TransactionAttribute(REQUIRES_NEW)
