@@ -8,6 +8,7 @@ import com.cs391.data.Student;
 import com.cs391.data.Supervisor;
 import com.cs391.data.User;
 import com.cs391.data.UserGroup;
+import com.cs391.thrift.TimestampService;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -25,6 +26,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 
 @Stateless
 public class UserManagement {
@@ -233,11 +239,22 @@ public class UserManagement {
     
     @TransactionAttribute(MANDATORY)
     private void writeTolog(String info) {
-        Log log = new Log();
-        log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
-        log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
-        log.setInfo(info);
-        em.persist(log);  
+        try {
+            TTransport transport;
+            transport = new TSocket("localhost", 10000);
+            transport.open();
+            TProtocol protocol = new TBinaryProtocol(transport);
+            TimestampService.Client client = new TimestampService.Client(protocol);            
+            String timestamp = client.stamp();
+        
+            Log log = new Log();
+            log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+            log.setEventDate(timestamp);
+            log.setInfo(info);
+            em.persist(log); 
+        } catch (TException e){
+            System.err.println("Failed to receive timestamp"+e);
+        } 
     }
     
     @TransactionAttribute(REQUIRES_NEW)

@@ -269,22 +269,21 @@ public class ProjectManagement {
     
     @TransactionAttribute(MANDATORY)
     private void writeTolog(String info) {
-        Log log = new Log();
-        log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
-        log.setEventDate(new SimpleDateFormat("dd-MM-yyyy_HH:mm:ss").format(Calendar.getInstance().getTime()));
-        log.setInfo(info);
-        em.persist(log); 
-           
         try {
             TTransport transport;
             transport = new TSocket("localhost", 10000);
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TimestampService.Client client = new TimestampService.Client(protocol);
-            String result = client.stamp();
-            System.out.println("RPC Call: " +result);
+            TimestampService.Client client = new TimestampService.Client(protocol);            
+            String timestamp = client.stamp();
+        
+            Log log = new Log();
+            log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
+            log.setEventDate(timestamp);
+            log.setInfo(info);
+            em.persist(log); 
         } catch (TException e){
-            System.err.println("Failed to receive timestamp");
+            System.err.println("Failed to receive timestamp"+e);
         }
     }
     
