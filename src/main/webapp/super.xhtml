@@ -19,7 +19,7 @@
 
         <p:tabView dynamic="true" cache="true" id="tabView">
             <p:ajax event="tabChange" update="tabView"/>
-            <p:tab title="Reports">
+            <p:tab title="Projects">
                 <h:form id="reportsForm">
                     <h:panelGrid id="grid" columns="2" cellpadding="10">
                         <p:dataTable id="report" var="project" value="#{superView.projects}"
@@ -71,118 +71,7 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
-                </h:form>
-            </p:tab>
-
-            <p:tab title="Register Project">
-                <h:form id="registerProjectForm">
-                    <p:panel>
-                        <h:panelGrid columns="2" cellpadding="10">
-                            <p:outputLabel for="projectTitle" value="Project title:" />
-                            <p:inputTextarea id="projectTitle" value="#{superView.projectTitle}" label="title" required="true" >
-                                <f:validateLength maximum="200" minimum="5" />
-                            </p:inputTextarea>
-                            
-                            <p:outputLabel for="projectDescription" value="Project description:" />
-                            <p:inputTextarea id="projectDescription" value="#{superView.projectDescription}" label="description" required="true" >
-                                <f:validateLength maximum="1000" minimum="5" />
-                            </p:inputTextarea>
-                            
-                            <p:outputLabel for="projectSkills" value="Project skills:" />
-                            <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills">
-                                <f:validateLength maximum="1000" />
-                            </p:inputTextarea>
-                                                        
-                            <p:outputLabel for="projectTopics" value="Project topics:" />
-                            <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3" required="true" >
-                                <f:selectItems value="#{superView.topics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
-                            </p:selectManyCheckbox>
-                            
-                        </h:panelGrid>
-                        <p:commandButton value="Register" action="#{superView.registerProject}" icon="ui-icon-check"  >
-                            <f:ajax render="registerProjectForm"/>
-                        </p:commandButton>
-                    </p:panel>
-                </h:form>
-            </p:tab>
-
-            <p:tab title="Register Project Topic">
-                <h:form id="registerTopicForm">
-                    <p:panel>
-                        <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
-                            <f:facet name="header">
-                                Existing topics
-                            </f:facet>
-                            #{xtopic.topic}
-                        </p:dataList>
-
-                        <h:panelGrid columns="2" cellpadding="10">
-                            <p:outputLabel for="topicTitle" value="Topic title:" />
-                            <p:inputTextarea id="topicTitle" value="#{superView.topicTitle}" label="title" required="true" >
-                                <f:validateLength minimum="5" maximum="100" />
-                            </p:inputTextarea>
-
-                            <p:outputLabel for="topicDescription" value="Topic description:" />
-                            <p:inputTextarea id="topicDescription" value="#{superView.topicDescription}" label="description">
-                                <f:validateLength maximum="100" />
-                            </p:inputTextarea>
-                        </h:panelGrid>
-                        <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>                        
-                        <p:commandButton value="Refresh List" update="registerTopicForm" immediate="true"/>
-                    </p:panel>
-                </h:form>
-            </p:tab>
-
-            <p:tab title="Proposals">
-                <h:form id="proposalsForm">
-                    <h:panelGrid id="proposalsGrid" columns="2" cellpadding="10">
-                        <p:dataTable id="proposals" var="proposal" value="#{superView.proposals}"
-                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-                                    paginator="true" rows="10">
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Project title" />
-                                </f:facet>
-                                <h:outputText value="#{proposal.title}" />
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Topic" />
-                                </f:facet>
-                                <ui:repeat value="#{proposal.topic}" var="tpc" varStatus="loop">
-                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
-                                </ui:repeat>
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Required skills"/>
-                                </f:facet>
-                                <h:outputText value="#{proposal.requiredSkills}" />
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Project description" />
-                                </f:facet>
-                                <h:outputText value="#{proposal.description}" />
-                            </p:column>
-
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Student" />
-                                </f:facet>
-                                <h:outputText value="#{proposal.owner.sussexID}" />
-                            </p:column>
-
-                            <p:column>
-                                <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}" update="proposals"/>
-                                <p:commandButton value="Decline" action="#{superView.declineProposal(proposal)}" update="proposals"/>
-                            </p:column>
-                        </p:dataTable>
-                    </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="reportsForm"/>
                 </h:form>
             </p:tab>
             
@@ -236,8 +125,123 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="selectedForm"/>
                 </h:form>
             </p:tab>
+            
+            <p:tab title="Proposed">
+                <h:form id="proposalsForm">
+                    <h:panelGrid id="proposalsGrid" columns="2" cellpadding="10">
+                        <p:dataTable id="proposals" var="proposal" value="#{superView.proposals}"
+                                    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                                    paginator="true" rows="10">
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project title" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.title}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Topic" />
+                                </f:facet>
+                                <ui:repeat value="#{proposal.topic}" var="tpc" varStatus="loop">
+                                    <h:outputText value="#{tpc.topic}#{!loop.last ? ', ' : ''}" />
+                                </ui:repeat>
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Required skills"/>
+                                </f:facet>
+                                <h:outputText value="#{proposal.requiredSkills}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Project description" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.description}" />
+                            </p:column>
+
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Student" />
+                                </f:facet>
+                                <h:outputText value="#{proposal.owner.sussexID}" />
+                            </p:column>
+
+                            <p:column>
+                                <p:commandButton value="Accept" action="#{superView.acceptProposal(proposal.id)}" update="proposals"/>
+                                <p:commandButton value="Decline" action="#{superView.declineProposal(proposal)}" update="proposals"/>
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="proposalsForm"/>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register Project">
+                <h:form id="registerProjectForm">
+                    <p:panel>
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="projectTitle" value="Project title:" />
+                            <p:inputTextarea id="projectTitle" value="#{superView.projectTitle}" label="title" required="true" >
+                                <f:validateLength maximum="200" minimum="5" />
+                            </p:inputTextarea>
+                            
+                            <p:outputLabel for="projectDescription" value="Project description:" />
+                            <p:inputTextarea id="projectDescription" value="#{superView.projectDescription}" label="description" required="true" >
+                                <f:validateLength maximum="1000" minimum="5" />
+                            </p:inputTextarea>
+                            
+                            <p:outputLabel for="projectSkills" value="Project skills:" />
+                            <p:inputTextarea id="projectSkills" value="#{superView.projectSkills}" label="skills">
+                                <f:validateLength maximum="1000" />
+                            </p:inputTextarea>
+                                                        
+                            <p:outputLabel for="projectTopics" value="Project topics:" />
+                            <p:selectManyCheckbox id="projectTopics" value="#{superView.topics}" layout="grid" columns="3" required="true" >
+                                <f:selectItems value="#{superView.topics}" var="topic" itemLabel="#{topic.topic}" itemValue="#{topic.topicId}" />
+                            </p:selectManyCheckbox>
+                            
+                        </h:panelGrid>
+                        <p:commandButton value="Register" action="#{superView.registerProject}" icon="ui-icon-check"  >
+                            <f:ajax render="registerProjectForm"/>
+                        </p:commandButton>
+                    </p:panel>
+                </h:form>
+            </p:tab>
+
+            <p:tab title="Register Topic">
+                <h:form id="registerTopicForm">
+                    <p:panel>
+                        <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
+                            <f:facet name="header">
+                                Existing topics
+                            </f:facet>
+                            #{xtopic.topic}
+                        </p:dataList>
+
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:outputLabel for="topicTitle" value="Topic title:" />
+                            <p:inputTextarea id="topicTitle" value="#{superView.topicTitle}" label="title" required="true" >
+                                <f:validateLength minimum="5" maximum="100" />
+                            </p:inputTextarea>
+
+                            <p:outputLabel for="topicDescription" value="Topic description:" />
+                            <p:inputTextarea id="topicDescription" value="#{superView.topicDescription}" label="description">
+                                <f:validateLength maximum="100" />
+                            </p:inputTextarea>
+                        </h:panelGrid>
+                        <p:commandButton value="Register" action="#{superView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>                        
+                        <p:commandButton value="Refresh List" update="registerTopicForm" immediate="true"/>
+                    </p:panel>
+                </h:form>
+            </p:tab>
+            
 
         </p:tabView>
 

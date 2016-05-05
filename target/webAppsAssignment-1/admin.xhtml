@@ -12,7 +12,7 @@
         <p:growl id="growl" showDetail="true" autoUpdate="true" sticky="true"/>
 
         <p:tabView dynamic="true" cache="true">
-            <p:tab title="Project Reports">
+            <p:tab title="All Projects">
                 <h:form id="reportsForm">
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel for="supervisor" value="Supervisor: " />
@@ -80,10 +80,11 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="reportsForm"/>
                 </h:form>
             </p:tab>
             
-            <p:tab title="Student Reports">
+            <p:tab title="Students">
                 <h:form id="studentReportsForm">
                     <h:panelGrid columns="2" cellpadding="5">
                         <p:outputLabel for="status" value="User status: " />
@@ -136,6 +137,7 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="studentReportsForm"/>
                 </h:form>
             </p:tab>
 
@@ -187,9 +189,9 @@
                             </p:inputText>
 
                             <p:outputLabel for="password" value="Password:" />
-                            <p:inputText id="password" value="#{adminView.registerPassword}" label="Password" required="true">
+                            <p:password id="password" value="#{adminView.registerPassword}" label="Password" required="true">
                                 <f:validateLength minimum="6" maximum="18" />
-                            </p:inputText>
+                            </p:password>>
 
                         </h:panelGrid>
                     </p:panel>
@@ -198,30 +200,28 @@
                 </h:form>
             </p:tab>
 
-            <p:tab title="Register Project Topic">
+            <p:tab title="Register Topic">
                 <h:form id="registerTopicForm">
-                    <p:panel>
-                        <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
-                            <f:facet name="header">
-                                Existing topics
-                            </f:facet>
-                            #{xtopic.topic}
-                        </p:dataList>
+                    <p:dataList value="#{adminView.topics}" var="xtopic" type="ordered">
+                        <f:facet name="header">
+                            Existing topics
+                        </f:facet>
+                        #{xtopic.topic}
+                    </p:dataList>
 
-                        <h:panelGrid columns="2" cellpadding="10">
-                            <p:outputLabel for="topicTitle" value="Topic title:" />
-                            <p:inputTextarea id="topicTitle" value="#{adminView.topicTitle}" label="title" required="true" >
-                                <f:validateLength minimum="5" maximum="100" />
-                            </p:inputTextarea>
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <p:outputLabel for="topicTitle" value="Topic title:" />
+                        <p:inputTextarea id="topicTitle" value="#{adminView.topicTitle}" label="title" required="true" >
+                            <f:validateLength minimum="5" maximum="100" />
+                        </p:inputTextarea>
 
-                            <p:outputLabel for="topicDescription" value="Topic description:" />
-                            <p:inputTextarea id="topicDescription" value="#{adminView.topicDescription}" label="description">
-                                <f:validateLength maximum="100" />                                
-                            </p:inputTextarea>
-                        </h:panelGrid>
-                        <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>
-                        <p:commandButton value="Refresh List" update="registerTopicForm"/>
-                    </p:panel>
+                        <p:outputLabel for="topicDescription" value="Topic description:" />
+                        <p:inputTextarea id="topicDescription" value="#{adminView.topicDescription}" label="description">
+                            <f:validateLength maximum="100" />                                
+                        </p:inputTextarea>
+                    </h:panelGrid>
+                    <p:commandButton value="Register" action="#{adminView.registerTopic}" icon="ui-icon-check" update="registerTopicForm"/>
+                    <p:commandButton value="Refresh List" update="registerTopicForm"/>
                 </h:form>
             </p:tab>
             
@@ -263,6 +263,7 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="logsForm"/>
                 </h:form>
             </p:tab>
             
@@ -302,6 +303,7 @@
                             </p:column>
                         </p:dataTable>
                     </h:panelGrid>
+                    <p:commandButton value="Refresh List" update="releaseForm"/>
                 </h:form>
             </p:tab>
         </p:tabView>

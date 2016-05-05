@@ -14,7 +14,7 @@
 
         <p:tabView dynamic="true" cache="true" id="tabView">
             <p:ajax event="tabChange" update="tabView"/>
-            <p:tab title="Projects">
+            <p:tab title="Available Projects">
                 <h:form id="projectsForm">
                     <c:if test="#{!studentView.selected}">
                         <h:panelGrid id="grid" columns="2" cellpadding="10">
@@ -64,6 +64,7 @@
                                 </p:column>
                             </p:dataTable>
                         </h:panelGrid>
+                        <p:commandButton value="Refresh List" update="projectsForm"/>
                     </c:if>
                     
                     <c:if test="#{studentView.selected}">

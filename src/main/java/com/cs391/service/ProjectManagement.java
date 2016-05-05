@@ -276,7 +276,8 @@ public class ProjectManagement {
             TProtocol protocol = new TBinaryProtocol(transport);
             TimestampService.Client client = new TimestampService.Client(protocol);            
             String timestamp = client.stamp();
-        
+            transport.close();
+
             Log log = new Log();
             log.setSussexID(((User) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user")).getSussexID());
             log.setEventDate(timestamp);
